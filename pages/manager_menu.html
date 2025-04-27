@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wave Cafe - Manager</title>
+    <link rel="stylesheet" href="../assets/fontawesome/css/all.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/tooplate-wave-cafe.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+
+  <body>
+    <div class="tm-container">
+      <div class="tm-row">
+        <div class="tm-left">
+          <div class="tm-left-inner">
+            <div class="tm-site-header">
+              <i class="fas fa-user-cog fa-3x tm-site-logo"></i>
+              <h1 class="tm-site-name">Manager Panel</h1>
+            </div>
+            <nav class="tm-site-nav">
+              <ul class="tm-site-nav-ul">
+                <li class="tm-page-nav-item">
+                  <a href="#" class="tm-page-link" id="menuLink">
+                    <i class="fas fa-mug-hot tm-page-link-icon"></i>
+                    <span>Menu</span>
+                  </a>
+                </li>
+                <li class="tm-page-nav-item">
+                  <a href="#" class="tm-page-link active" id="managementLink">
+                    <i class="fas fa-comments tm-page-link-icon"></i>
+                    <span>Quản Lý</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Quản Lý Section -->
+        <div
+          class="tm-right"
+          id="managementSection"
+          style="background-color: white; padding: 20px; border-radius: 10px"
+        >
+          <main class="tm-main">
+            <div class="tm-page-content">
+              <h2 class="tm-text-primary text-center mb-4">Quản lý hóa đơn</h2>
+
+              <!-- Secret Code -->
+              <div class="d-flex justify-content-between mb-3">
+                <button id="generateSecretCode" class="btn btn-danger">
+                  Generate Secret Code
+                </button>
+                <span
+                  id="secretCodeDisplay"
+                  class="font-weight-bold text-danger"
+                  style="font-size: 20px"
+                ></span>
+              </div>
+
+              <!-- Danh sách hóa đơn -->
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th>ID</th>
+                      <th>Bàn</th>
+                      <th>Món đã gọi</th>
+                      <th>Tổng tiền</th>
+                      <th>Thời gian mở bàn → Thanh toán</th>
+                      <th>Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orderManagerList">
+                    <!-- Hóa đơn sẽ hiển thị tại đây -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </main>
+        </div>
+
+        <!-- Menu Section -->
+        <div
+          class="tm-right"
+          id="menuSection"
+          style="padding: 20px; border-radius: 10px; display: none"
+        >
+          <main class="tm-main">
+            <div class="tm-page-content">
+              <!-- Content for Menu here -->
+              <div id="drink" class="tm-page-content">
+                <nav class="tm-black-bg tm-drinks-nav">
+                  <ul id="categoryTabs"></ul>
+                </nav>
+                <div id="drinkTabContents"></div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+    <!-- Background video -->
+    <div class="tm-video-wrapper">
+      <i id="tm-video-control-button" class="fas fa-pause"></i>
+      <video autoplay muted loop id="tm-video">
+        <source src="../assets/video/wave-cafe-video-bg.mp4" type="video/mp4" />
+      </video>
+    </div>
+
+    <script>
+      let isCategoriesLoaded = false;
+      $(document).ready(function () {
+        // Hiển thị Menu khi người dùng chọn
+        $("#menuLink").click(function () {
+          $("#managementSection").hide(); // Ẩn quản lý
+          $("#menuSection").show(); // Hiển thị menu
+          $("#managementLink").removeClass("active");
+          $(this).addClass("active");
+
+          // Kiểm tra xem danh mục đã được tải chưa, nếu chưa thì tải
+          if (!isCategoriesLoaded) {
+            loadCategories(); // Tải categories chỉ khi chưa tải
+            isCategoriesLoaded = true; // Đánh dấu đã tải
+          }
+        });
+
+        // Hiển thị Quản lý khi người dùng chọn
+        $("#managementLink").click(function () {
+          $("#menuSection").hide(); // Ẩn menu
+          $("#managementSection").show(); // Hiển thị quản lý
+          $("#menuLink").removeClass("active");
+          $(this).addClass("active");
+        });
+      });
+
+      let lastGeneratedTime = 0;
+      const cooldownTime = 10 * 60 * 1000;
+
+      // Hàm kiểm tra mã đã được tạo trong ngày chưa
+      function checkExistingSecretCode() {
+        $.ajax({
+          url: "http://localhost:3005/api/secret/verify", // API kiểm tra mã đã tạo trong ngày
+          type: "POST",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"), // Token nếu có
+          },
+          success: function (data) {
+            console.log(data);
+            if (data.status === "success" && data.metaData) {
+              // Nếu có mã thì hiển thị luôn mã đó và vô hiệu hóa nút tạo mới
+              $("#secretCodeDisplay").text(
+                "Secret code: " + data.metaData.code
+              );
+              $("#generateSecretCode").prop("disabled", true);
+            } else {
+              // Nếu không có mã, cho phép tạo mã mới
+              $("#generateSecretCode").prop("disabled", false);
+            }
+          },
+          error: function (err) {
+            console.error("Lỗi khi kiểm tra mã hiện tại: ", err);
+          },
+        });
+      }
+
+      // Kiểm tra mã khi load trang
+      checkExistingSecretCode();
+
+      // Khi nhấn nút tạo mã mới
+      $("#generateSecretCode").click(function () {
+        let currentTime = new Date().getTime();
+
+        if (currentTime - lastGeneratedTime >= cooldownTime) {
+          // Gửi yêu cầu tới API để tạo mã
+          $.ajax({
+            url: "http://localhost:3005/api/secret/generate", // Đường dẫn API
+            type: "POST",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"), // Thêm token nếu cần
+            },
+            success: function (data) {
+              // Hiển thị mã được tạo
+              $("#secretCodeDisplay").text("Secret Code: " + data.metaData);
+
+              // Ẩn mã sau 5 giây và quay lại trạng thái ban đầu
+              setTimeout(function () {
+                $("#secretCodeDisplay").text("");
+              }, 5000); // 5 giây sau sẽ ẩn thông báo
+
+              lastGeneratedTime = currentTime; // Cập nhật thời gian
+              $(this).prop("disabled", true); // Disable nút sau khi tạo mã
+              startCooldownTimer();
+            },
+            error: function (err) {
+              alert("Có lỗi xảy ra khi tạo mã!");
+              console.error(err);
+            },
+          });
+        } else {
+          let remainingTime = Math.ceil(
+            (cooldownTime - (currentTime - lastGeneratedTime)) / 1000
+          );
+          let minutes = Math.floor(remainingTime / 60);
+          let seconds = remainingTime % 60;
+          $("#secretCodeDisplay").text(
+            `Chờ ${minutes} phút ${seconds} giây để tạo mã mới.`
+          );
+        }
+      });
+
+      // Bắt đầu bộ đếm ngược
+      function startCooldownTimer() {
+        let interval = setInterval(function () {
+          let currentTime = new Date().getTime();
+          let remainingTime = Math.ceil(
+            (cooldownTime - (currentTime - lastGeneratedTime)) / 1000
+          );
+
+          if (remainingTime <= 0) {
+            clearInterval(interval);
+            $("#generateSecretCode").prop("disabled", false);
+            $("#secretCodeDisplay").text("");
+          }
+        }, 1000);
+      }
+
+      let categoryTabMap = {};
+      // Hàm tải danh mục
+      async function loadCategories() {
+        try {
+          const res = await fetch("http://localhost:3004/api/category", {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          });
+          const data = await res.json();
+          if (data.status === "success") {
+            const seenNames = new Set();
+            const uniqueCategories = data.metaData.filter((cat) => {
+              if (seenNames.has(cat.name)) return false;
+              seenNames.add(cat.name);
+              return true;
+            });
+
+            const tabs = document.getElementById("categoryTabs");
+            const contents = document.getElementById("drinkTabContents");
+
+            // Clear previous categories before adding new ones
+            tabs.innerHTML = "";
+            contents.innerHTML = "";
+
+            for (let i = 0; i < uniqueCategories.length; i++) {
+              const cat = uniqueCategories[i];
+              const tabId = "tab-" + cat.id;
+              categoryTabMap[cat.name] = tabId;
+
+              const li = document.createElement("li");
+              li.innerHTML = `<a href="#" class="tm-tab-link ${
+                i === 0 ? "active" : ""
+              }" data-id="${tabId}">${cat.name}</a>`;
+              tabs.appendChild(li);
+
+              const div = document.createElement("div");
+              div.id = tabId;
+              div.className = "tm-tab-content";
+              if (i !== 0) div.style.display = "none";
+              div.innerHTML = `<div class="tm-list"></div>`;
+              contents.appendChild(div);
+
+              // Load sản phẩm cho từng danh mục
+              await loadProductsByCategory(cat.id, tabId);
+            }
+
+            // Gán sự kiện cho các tab danh mục
+            $(".tm-tab-link").click(function (e) {
+              e.preventDefault();
+              $(".tm-tab-content").hide();
+              const tabId = $(this).data("id");
+              $("#" + tabId).show();
+              $(".tm-tab-link").removeClass("active");
+              $(this).addClass("active");
+            });
+          }
+        } catch (err) {
+          console.error("Lỗi khi tải danh mục:", err);
+        }
+      }
+
+      // Hàm tải sản phẩm theo danh mục
+      async function loadProductsByCategory(categoryId, tabId) {
+        try {
+          const res = await fetch(
+            `http://localhost:3004/api/products/category/${categoryId}`
+          );
+          const data = await res.json();
+          if (data.status === "success") {
+            const container = document.querySelector(`#${tabId} .tm-list`);
+            for (const p of data.metaData) {
+              const item = document.createElement("div");
+              item.className = "tm-list-item";
+
+              const htmlContent = `
+              <img src="/backend/product-service/images/${p.imageUrl}" class="tm-list-item-img" alt="${p.name}">
+              <div class="tm-black-bg tm-list-item-text">
+                <h3 class="tm-list-item-name">
+                  ${p.name}
+                  <span class="tm-list-item-price">$${p.price}</span>
+                </h3>
+                <p class="tm-list-item-description">${p.description}</p>
+                <button class="btn btn-sm btn-danger mr-2 toggle-availability" data-item="${p.id}">Hết món</button>
+
+              </div>
+            `;
+              item.innerHTML = htmlContent;
+              container.appendChild(item);
+            }
+          }
+        } catch (err) {
+          console.error("Lỗi khi load sản phẩm:", err);
+        }
+      }
+
+      $(document).on("click", ".toggle-availability", function () {
+        const button = $(this);
+        const productId = button.data("item"); // Get product ID
+        const isAvailable = button.hasClass("btn-success") ? 0 : 1; // Toggle availability (0 or 1)
+
+        console.log(
+          `Button clicked for product ${productId}. Setting availability to ${isAvailable}`
+        );
+
+        // Send AJAX request to update product availability
+        $.ajax({
+          url: "http://localhost:3002/api/products/toggle-availability", // Corrected URL
+          type: "POST",
+          data: JSON.stringify({
+            product_id: productId,
+            is_available: isAvailable,
+          }),
+          contentType: "application/json",
+          success: function (response) {
+            if (response.status === "success") {
+              if (isAvailable === 1) {
+                button
+                  .removeClass("btn-danger")
+                  .addClass("btn-success")
+                  .text("Còn món");
+              } else {
+                button
+                  .removeClass("btn-success")
+                  .addClass("btn-danger")
+                  .text("Hết món");
+              }
+            } else {
+              alert("Có lỗi khi cập nhật trạng thái món ăn!");
+              console.error("Lỗi khi cập nhật trạng thái:", error); // In chi tiết lỗi
+              res
+                .status(500)
+                .json({
+                  status: "error",
+                  message: "Lỗi khi cập nhật trạng thái",
+                });
+            }
+          },
+          error: function (err) {
+            console.error("Error in AJAX request:", err);
+            alert("Có lỗi khi cập nhật món ăn!");
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

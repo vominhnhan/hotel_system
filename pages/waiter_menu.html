@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wave Cafe - Waiter</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="../assets/fontawesome/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/tooplate-wave-cafe.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+  <div class="tm-container">
+    <div class="tm-row">
+      <!-- Sidebar -->
+      <div class="tm-left">
+        <div class="tm-left-inner">
+          <div class="tm-site-header">
+            <i class="fas fa-coffee fa-3x tm-site-logo"></i>
+            <h1 class="tm-site-name">Wave Cafe - Waiter</h1>
+          </div>
+          <nav class="tm-site-nav">
+            <ul class="tm-site-nav-ul">
+              <li class="tm-page-nav-item">
+                <a href="#drink" class="tm-page-link active">
+                  <i class="fas fa-mug-hot tm-page-link-icon"></i>
+                  <span>Menu</span>
+                </a>
+              </li>
+              <li class="tm-page-nav-item">
+                <!-- Khi bấm nút "Gửi đơn", gọi hàm submitOrder() -->
+                <a href="#" class="tm-page-link" onclick="submitOrder()">
+                  <i class="fas fa-paper-plane tm-page-link-icon"></i>
+                  <span>Gửi đơn</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- Main content -->
+      <div class="tm-right">
+        <main class="tm-main">
+          <div id="drink" class="tm-page-content">
+            <!-- Thanh danh mục -->
+            <nav class="tm-black-bg tm-drinks-nav">
+              <ul id="categoryTabs"></ul>
+            </nav>
+            <!-- Nội dung danh mục (sản phẩm) -->
+            <div id="drinkTabContents"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background video -->
+  <div class="tm-video-wrapper">
+    <i id="tm-video-control-button" class="fas fa-pause"></i>
+    <video autoplay muted loop id="tm-video">
+      <source src="../assets/video/wave-cafe-video-bg.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  <script>
+    // Variables toàn cục
+    let currentOrderId = null; // Order id đã được tạo ở trang "Mở khóa bàn"
+    let selectedTableId = null; // Sẽ được lấy từ sessionStorage ("tableNumber")
+    const categoryTabMap = {};
+
+    // Khi DOM tải xong, lấy thông tin bàn từ sessionStorage và load danh mục sản phẩm
+    document.addEventListener("DOMContentLoaded", () => {
+      const storedTable = sessionStorage.getItem("tableNumber");
+      const storedOrder = sessionStorage.getItem("order_id");
+
+      if (storedTable) {
+        // Nếu DB lưu ID là số, chuyển đổi sang Number. Nếu không, dùng thẳng value.
+        selectedTableId = parseInt(storedTable, 10) || storedTable;
+      } else {
+        alert("Bạn chưa chọn bàn. Vui lòng quay lại trang mở khóa.");
+        return;
+      }
+      if (storedOrder) {
+        currentOrderId = parseInt(storedOrder, 10) || storedOrder;
+      }
+      loadCategories();
+    });
+
+    // Hàm loadCategories(): Gọi API GET /api/category để load danh mục và render các tab
+    async function loadCategories() {
+      try {
+        const res = await fetch("http://localhost:3004/api/category", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          // Lấy danh mục từ key "metaData" hoặc "data"
+          const uniqueCategories = data.metaData.filter(
+            (cat, index, self) =>
+              self.findIndex((t) => t.name === cat.name) === index
+          );
+
+          const tabs = document.getElementById("categoryTabs");
+          const contents = document.getElementById("drinkTabContents");
+
+          uniqueCategories.forEach((cat, index) => {
+            const tabId = "tab-" + cat.id;
+            categoryTabMap[cat.name] = tabId;
+
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="#" class="tm-tab-link ${index === 0 ? "active" : ""
+              }" data-id="${tabId}">${cat.name}</a>`;
+            tabs.appendChild(li);
+
+            const div = document.createElement("div");
+            div.id = tabId;
+            div.className = "tm-tab-content";
+            if (index !== 0) div.style.display = "none";
+            div.innerHTML = `<div class="tm-list"></div>`;
+            contents.appendChild(div);
+
+            loadProductsByCategory(cat.id, tabId);
+          });
+
+          $(".tm-tab-link").click(function (e) {
+            e.preventDefault();
+            $(".tm-tab-content").hide();
+            const tabId = $(this).data("id");
+            $("#" + tabId).show();
+            $(".tm-tab-link").removeClass("active");
+            $(this).addClass("active");
+          });
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải danh mục:", err);
+      }
+    }
+
+    async function loadProductsByCategory(categoryId, tabId) {
+      try {
+        const res = await fetch(
+          `http://localhost:3004/api/products/category/${categoryId}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        const data = await res.json();
+        if (data.status === "success") {
+          const container = document.querySelector(`#${tabId} .tm-list`);
+          data.metaData.forEach((p) => {
+            const item = document.createElement("div");
+            item.className = "tm-list-item";
+    
+            const isAvailable = p.is_available;
+            console.log(`Product ID: ${p.id}, Available: ${isAvailable}`);
+    
+            // Kiểm tra trạng thái và tạo giao diện phù hợp
+            let htmlContent = '';
+            if (isAvailable) {
+              // Giao diện cho sản phẩm có sẵn
+              htmlContent = `
+                <img src="/backend/product-service/images/${p.imageUrl}" class="tm-list-item-img" alt="${p.name}">
+                <div class="tm-black-bg tm-list-item-text">
+                  <h3 class="tm-list-item-name">
+                    ${p.name}
+                    <span class="tm-list-item-price">$${p.price}</span>
+                  </h3>
+                  <p class="tm-list-item-description">${p.description}</p>
+                  <button class="btn btn-sm btn-secondary decrease" data-item="${p.id}">-</button>
+                  <span id="qty-${p.id}" class="mx-2">0</span>
+                  <button class="btn btn-sm btn-primary increase" data-item="${p.id}">+</button>
+                </div>
+              `;
+            } else {
+              // Giao diện cho sản phẩm hết món
+              htmlContent = `
+                <img src="/backend/product-service/images/${p.imageUrl}" class="tm-list-item-img" alt="${p.name}">
+                <div class="tm-black-bg tm-list-item-text">
+                  <h3 class="tm-list-item-name">
+                    ${p.name}
+                    <span class="tm-list-item-price">$${p.price}</span>
+                  </h3>
+                  <p class="tm-list-item-description">${p.description}</p>
+                  <button class="btn btn-sm btn-danger decrease" data-item="${p.id}" disabled>-</button>
+                  <span id="qty-${p.id}" class="mx-2">Hết món</span>
+                  <button class="btn btn-sm btn-danger increase" data-item="${p.id}" disabled>+</button>
+                </div>
+              `;
+            }
+    
+            item.innerHTML = htmlContent;
+            container.appendChild(item);
+          });
+        }
+      } catch (err) {
+        console.error("Lỗi khi tải sản phẩm:", err);
+      }
+    }
+    
+    
+
+
+
+    // Event delegation: Khi nhấn nút "+" hoặc "-", chỉ cập nhật số lượng hiển thị trên giao diện
+    $(document).on("click", ".increase", function () {
+      const isAvailable = $(this).attr("disabled");
+      if (isAvailable) {
+        e.preventDefault();  // Ngừng hành động nếu nút bị disabled
+        return;
+      }
+
+      const itemId = $(this).data("item");
+      const qtyElement = $("#qty-" + itemId);
+      let qty = parseInt(qtyElement.text()) || 0;
+      qtyElement.text(qty + 1);
+    });
+
+    $(document).on("click", ".decrease", function () {
+      const isAvailable = $(this).attr("disabled");
+      if (isAvailable) {
+        e.preventDefault();  // Ngừng hành động nếu nút bị disabled
+        return;
+      }
+
+      const itemId = $(this).data("item");
+      const qtyElement = $("#qty-" + itemId);
+      let qty = parseInt(qtyElement.text()) || 0;
+      if (qty > 0) {
+        qtyElement.text(qty - 1);
+      }
+    });
+
+    // Hàm submitOrder(): Khi bấm "Gửi đơn", quét số lượng > 0 và gửi đơn hàng qua API /api/order/send
+    async function submitOrder() {
+      // Quét tất cả các span số lượng (các id có dạng "qty-{productId}")
+      const qtySpans = document.querySelectorAll("span[id^='qty-']");
+      const orderItems = [];
+      qtySpans.forEach((span) => {
+        const productId = span.id.replace("qty-", "");
+        const quantity = parseInt(span.textContent) || 0;
+        if (quantity > 0) {
+          orderItems.push({ product_id: productId, quantity });
+        }
+      });
+
+      if (orderItems.length === 0) {
+        alert("Bạn chưa gọi món nào!");
+        return;
+      }
+
+      // Kiểm tra xem currentOrderId đã có chưa (được lưu từ trang khóa bàn)
+      if (!currentOrderId) {
+        alert("Không tìm thấy order. Vui lòng mở khóa bàn trước!");
+        return;
+      }
+
+      // Gọi API POST /api/order/send
+      try {
+        const res = await fetch("http://localhost:3002/api/order/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            table_id: selectedTableId,
+            order_id: currentOrderId,
+            items: orderItems,
+          }),
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          alert("Gửi đơn thành công!");
+          // Reset currentOrderId nếu muốn tạo đơn mới cho lần gọi kế tiếp
+          currentOrderId = null;
+        } else {
+          alert("Không thể gửi đơn: " + data.message);
+        }
+      } catch (err) {
+        console.error("Lỗi khi gửi đơn:", err);
+        alert("Có lỗi khi gửi đơn");
+      }
+    }
+  </script>
+</body>
+
+</html>
