@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Quản lý dịch vụ
+model Service {
+  id         String   @id @default(uuid())
+  name       String   @db.VarChar(255)
+  category   String   @db.VarChar(100)
+  price      Float    @db.Double
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([category])
+  @@map("services")
+}

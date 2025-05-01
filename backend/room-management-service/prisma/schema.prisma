@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Quản lý loại phòng
+model RoomType {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  rooms     Room[]   @relation("RoomTypeToRooms")
+
+  @@index([name])
+  @@map("room_type")
+}
+
+// Quản lý phòng
+model Room {
+  id          String      @id @default(uuid())
+  name        String      @db.VarChar(255)
+  description String      @db.Text
+  type_id     String
+  status      RoomStatus
+  price       Float       @db.Double
+  is_cleaned  Boolean     @default(true)
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+  type        RoomType    @relation("RoomTypeToRooms", fields: [type_id], references: [id], onDelete: Restrict)
+
+  @@index([type_id])
+  @@index([status])
+  @@map("rooms")
+}
+
+// Enum cho trạng thái phòng
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+}
