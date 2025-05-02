@@ -1,29 +1,30 @@
+import validator from "validator";
+import { ERROR_MESSAGES, ROOM_STATUSES } from "../common/constants.js";
+
 const validateRoom = (req, res, next) => {
   const { name, type_id, price, description, status } = req.body;
 
   // Kiểm tra các trường bắt buộc
   if (!name || !type_id || !price || !description) {
-    return res.status(400).json({ error: 'Thiếu các trường bắt buộc: name, type_id, price, description' });
+    return res.status(400).json({ error: ERROR_MESSAGES.MISSING_REQUIRED_FIELDS });
+  }
+
+  // Kiểm tra type_id là UUID hợp lệ
+  if (!validator.isUUID(type_id)) {
+    return res.status(400).json({ error: ERROR_MESSAGES.INVALID_UUID });
   }
 
   // Kiểm tra price phải là số dương
   if (typeof price !== 'number' || price <= 0) {
-    return res.status(400).json({ error: 'price phải là số dương' });
+    return res.status(400).json({ error: ERROR_MESSAGES.INVALID_PRICE });
   }
 
-  // Kiểm tra type_id phải là một UUID hợp lệ
-  const isValidUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(type_id);
-  if (!isValidUUID) {
-    return res.status(400).json({ error: 'type_id phải là một UUID hợp lệ' });
-  }
-
-  // Kiểm tra status (nếu có) phải nằm trong enum RoomStatus
-  const validStatuses = ['AVAILABLE', 'OCCUPIED', 'MAINTENANCE'];
-  if (status && !validStatuses.includes(status)) {
-    return res.status(400).json({ error: 'status phải là một trong: AVAILABLE, OCCUPIED, MAINTENANCE' });
+  // Kiểm tra status (nếu có)
+  if (status && !Object.values(ROOM_STATUSES).includes(status)) {
+    return res.status(400).json({ error: `${ERROR_MESSAGES.STATUS_NOT_FOUND}: status phải là một trong: ${Object.values(ROOM_STATUSES).join(', ')}` });
   }
 
   next();
 };
 
-module.exports = validateRoom;
+export default validateRoom;

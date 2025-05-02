@@ -1,0 +1,25 @@
+{
+  "name": "reporting-service",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "migrate": "npx prisma migrate dev --name init",
+    "generate": "npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "axios": "^1.9.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pdfkit": "^0.17.0",
+    "prisma": "^5.0.0",
+    "validator": "^13.15.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}

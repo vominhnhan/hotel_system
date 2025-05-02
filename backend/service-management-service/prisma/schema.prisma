@@ -9,13 +9,33 @@ datasource db {
 
 // Quản lý dịch vụ
 model Service {
-  id         String   @id @default(uuid())
-  name       String   @db.VarChar(255)
-  category   String   @db.VarChar(100)
-  price      Float    @db.Double
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id              String          @id @default(uuid())
+  name            String          @db.VarChar(255)
+  category        String          @db.VarChar(100)
+  price           Float           @db.Double
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+  serviceBookings ServiceBooking[] // Liên kết với các đặt dịch vụ
 
   @@index([category])
   @@map("services")
+}
+
+// Đặt dịch vụ
+model ServiceBooking {
+  id         String   @id @default(uuid())
+  serviceId  String   @db.VarChar(36)
+  customerId String   @db.VarChar(255)
+  bookingId  String?  @db.VarChar(36) // Liên kết với booking (tùy chọn)
+  quantity   Int      @default(1)
+  totalPrice Float    @db.Double
+  status     String   @db.VarChar(50) // PENDING, CONFIRMED, CANCELLED
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@index([customerId])
+  @@map("service_bookings")
 }

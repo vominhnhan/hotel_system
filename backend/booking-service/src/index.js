@@ -1,8 +1,11 @@
-require('dotenv').config();
-const express = require('express');
+import dotenv from 'dotenv';
+import express from 'express';
+import bookingRoutes from './routes/bookingRoutes.js';
+import errorHandler from './middlewares/errorHandler.js';
+
+dotenv.config();
+
 const app = express();
-const bookingRoutes = require('./routes/bookingRoutes');
-const errorHandler = require('./middlewares/errorHandler');
 
 app.use(express.json());
 app.use('/api/bookings', bookingRoutes);

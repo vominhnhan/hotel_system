@@ -1,12 +1,14 @@
-require('dotenv').config();
-const express = require('express');
+import dotenv from 'dotenv';
+import express from 'express';
+import roomRoutes from './routes/roomRoutes.js';
+import errorHandler from './middlewares/errorHandler.js';
+
+dotenv.config();
+
 const app = express();
-const roomRoutes = require('./routes/roomRoutes');
-const errorHandler = require('./middlewares/errorHandler');
 
 app.use(express.json());
 app.use('/api/rooms', roomRoutes);
-
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3003;
