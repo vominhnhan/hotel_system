@@ -1,5 +1,0 @@
-# Ignore tất cả node_modules trong toàn bộ repo
-**/node_modules/
-
-# Ignore tất cả .env trong toàn bộ repo
-**/.env
