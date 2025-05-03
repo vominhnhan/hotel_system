@@ -25,7 +25,7 @@ const bookingService = {
   createBooking: async (data) => {
     const { customerId, checkIn, checkOut, numberOfGuests, status, totalAmount, roomIds } = data;
 
-    this.checkValidStatus(status); // Sử dụng phương thức checkValidStatus từ object
+    bookingService.checkValidStatus(status); 
 
     return await prisma.$transaction(async (tx) => {
       const booking = await tx.booking.create({
@@ -77,10 +77,11 @@ const bookingService = {
   updateBooking: async (id, data) => {
     const { customerId, checkIn, checkOut, numberOfGuests, status, totalAmount, roomIds } = data;
 
-    this.checkValidStatus(status); // Sử dụng phương thức checkValidStatus từ object
+    bookingService.checkValidStatus(status); 
 
     return await prisma.$transaction(async (tx) => {
-      await this.checkBookingExists(id);
+      await bookingService.checkBookingExists(id);
+
 
       const updatedBooking = await tx.booking.update({
         where: { id },
