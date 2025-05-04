@@ -560,72 +560,7 @@
         </div>
       </div>
     
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const roomModal = document.getElementById('roomModal');
-          roomModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const room = button.getAttribute('data-room');
-            const roomSelect = document.getElementById('roomSelect');
-            roomSelect.value = room;
-    
-            // Set default values based on room
-            let price = '180,000';
-            if (room === 'P.302') price = '150,000';
-            document.getElementById('price').value = price;
-            document.getElementById('amountToPay').value = price;
-          });
-    
-          // Simple duration and price update (basic logic)
-          const checkInTime = document.getElementById('checkInTime');
-          const checkOutTime = document.getElementById('checkOutTime');
-          const duration = document.getElementById('duration');
-          const price = document.getElementById('price');
-          const amountToPay = document.getElementById('amountToPay');
-    
-          function updateDuration() {
-            const checkIn = new Date(checkInTime.value);
-            const checkOut = new Date(checkOutTime.value);
-            const diffMs = checkOut - checkIn;
-            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-            duration.value = `${diffHours} giờ`;
-            const basePrice = parseInt(price.value.replace(/,/g, ''));
-            amountToPay.value = (diffHours * basePrice).toLocaleString();
-          }
-    
-          checkInTime.addEventListener('change', updateDuration);
-          checkOutTime.addEventListener('change', updateDuration);
-        });
-    
-        function toggleRoomStatus(roomId) {
-          const statusElement = document.querySelector(`.position-absolute .toggle-status[data-room="${roomId}"]`);
-          if (!statusElement) {
-            const badgeElement = document.querySelector(`.position-absolute .badge[data-room="${roomId}"]`);
-            if (badgeElement && badgeElement.textContent === 'Sạch') {
-              badgeElement.textContent = 'Chưa dọn';
-              badgeElement.classList.remove('bg-gradient-success');
-              badgeElement.classList.add('bg-gradient-warning');
-            } else if (badgeElement && badgeElement.textContent === 'Chưa dọn') {
-              badgeElement.textContent = 'Sạch';
-              badgeElement.classList.remove('bg-gradient-warning');
-              badgeElement.classList.add('bg-gradient-success');
-            }
-          }
-        }
       
-        function toggleCleaningStatus(roomId) {
-          const statusElement = document.querySelector(`.cleaning-status[data-room="${roomId}"]`);
-          if (statusElement.textContent === 'Sạch') {
-            statusElement.textContent = 'Chưa dọn';
-            statusElement.classList.remove('bg-gradient-success');
-            statusElement.classList.add('bg-gradient-warning');
-          } else {
-            statusElement.textContent = 'Sạch';
-            statusElement.classList.remove('bg-gradient-warning');
-            statusElement.classList.add('bg-gradient-success');
-          }
-        }
-      </script>
     <footer class="footer py-4  ">
       <div class="container-fluid">
         <div class="row align-items-center justify-content-lg-between">
@@ -764,35 +699,71 @@
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 
-
-  <!-- Script tính toán giá -->
   <script>
-    document.getElementById('serviceType').addEventListener('change', function() {
-      var serviceType = this.value;
-      if (serviceType === 'hourly') {
-        document.getElementById('hourlyService').style.display = 'block';
-        document.getElementById('overnightService').style.display = 'none';
-      } else if (serviceType === 'overnight') {
-        document.getElementById('hourlyService').style.display = 'none';
-        document.getElementById('overnightService').style.display = 'block';
+    document.addEventListener('DOMContentLoaded', function () {
+      const roomModal = document.getElementById('roomModal');
+      roomModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const room = button.getAttribute('data-room');
+        const roomSelect = document.getElementById('roomSelect');
+        roomSelect.value = room;
+
+        // Set default values based on room
+        let price = '180,000';
+        if (room === 'P.302') price = '150,000';
+        document.getElementById('price').value = price;
+        document.getElementById('amountToPay').value = price;
+      });
+
+      // Simple duration and price update (basic logic)
+      const checkInTime = document.getElementById('checkInTime');
+      const checkOutTime = document.getElementById('checkOutTime');
+      const duration = document.getElementById('duration');
+      const price = document.getElementById('price');
+      const amountToPay = document.getElementById('amountToPay');
+
+      function updateDuration() {
+        const checkIn = new Date(checkInTime.value);
+        const checkOut = new Date(checkOutTime.value);
+        const diffMs = checkOut - checkIn;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        duration.value = `${diffHours} giờ`;
+        const basePrice = parseInt(price.value.replace(/,/g, ''));
+        amountToPay.value = (diffHours * basePrice).toLocaleString();
       }
+
+      checkInTime.addEventListener('change', updateDuration);
+      checkOutTime.addEventListener('change', updateDuration);
     });
 
-    // Tính giá theo giờ
-    document.getElementById('hours').addEventListener('input', function() {
-      var hours = this.value;
-      var pricePerHour = 80000;
-      var total = hours * pricePerHour;
-      document.getElementById('totalHourlyPrice').textContent = total.toLocaleString();
-    });
-
-    // Tính giá qua đêm
-    document.getElementById('nights').addEventListener('input', function() {
-      var nights = this.value;
-      var pricePerNight = 400000;
-      var total = nights * pricePerNight;
-      document.getElementById('totalOvernightPrice').textContent = total.toLocaleString();
-    });
+    function toggleRoomStatus(roomId) {
+      const statusElement = document.querySelector(`.position-absolute .toggle-status[data-room="${roomId}"]`);
+      if (!statusElement) {
+        const badgeElement = document.querySelector(`.position-absolute .badge[data-room="${roomId}"]`);
+        if (badgeElement && badgeElement.textContent === 'Sạch') {
+          badgeElement.textContent = 'Chưa dọn';
+          badgeElement.classList.remove('bg-gradient-success');
+          badgeElement.classList.add('bg-gradient-warning');
+        } else if (badgeElement && badgeElement.textContent === 'Chưa dọn') {
+          badgeElement.textContent = 'Sạch';
+          badgeElement.classList.remove('bg-gradient-warning');
+          badgeElement.classList.add('bg-gradient-success');
+        }
+      }
+    }
+  
+    function toggleCleaningStatus(roomId) {
+      const statusElement = document.querySelector(`.cleaning-status[data-room="${roomId}"]`);
+      if (statusElement.textContent === 'Sạch') {
+        statusElement.textContent = 'Chưa dọn';
+        statusElement.classList.remove('bg-gradient-success');
+        statusElement.classList.add('bg-gradient-warning');
+      } else {
+        statusElement.textContent = 'Sạch';
+        statusElement.classList.remove('bg-gradient-warning');
+        statusElement.classList.add('bg-gradient-success');
+      }
+    }
   </script>
 
 </body>
