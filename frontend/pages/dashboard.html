@@ -60,7 +60,7 @@
             <li class="nav-item">
               <a class="nav-link text-dark" href="../pages/dashboard.html">
                 <i class="material-symbols-rounded opacity-5">table_view</i>
-                <span class="nav-link-text ms-1">Dashboard</span>
+                <span class="nav-link-text ms-1">Thống kê</span>
               </a>
             </li>
             <li class="nav-item">
@@ -325,154 +325,315 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên khách</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SĐT</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">CCCD</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Lịch sử đặt phòng</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <input type="checkbox" class="form-check-input"> Mã khách hàng
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên khách hàng</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Điện thoại</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nợ hiện tại</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tổng bàn</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tổng bàn đã tính nợ</th>
                       <th class="text-secondary opacity-7"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <!-- Khách hàng 1 -->
                     <tr>
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div>
-                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
+                            <input type="checkbox" class="form-check-input me-3">
                           </div>
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">John Michael</h6>
-                            <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>
+                            <h6 class="mb-0 text-sm">KH00011</h6>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <p class="text-xs text-secondary mb-0">0901234567</p>
+                        <p class="text-xs text-secondary mb-0">Minh Tri</p>
+                      </td>
+                      <td>
+                        <p class="text-xs text-secondary mb-0"></p>
                       </td>
                       <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold">1234567890</span>
+                        <span class="text-secondary text-xs font-weight-bold">0</span>
                       </td>
-                      <td class="align-middle text-center">
-                        <!-- Nút "Lịch sử đặt phòng" mở modal -->
-                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#historyModal1">
-                          Lịch sử đặt phòng
-                        </button>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">3,424,789,000</span>
                       </td>
-                      
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">3,424,789,000</span>
+                      </td>
                       <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#customerModal1">
+                          Thông tin
+                        </button>
                       </td>
                     </tr>
-                
-                    <!-- Khách hàng 2 -->
                     <tr>
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div>
-                            <img src="../assets/img/team-3.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user2">
+                            <input type="checkbox" class="form-check-input me-3">
                           </div>
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Alexa Liras</h6>
-                            <p class="text-xs text-secondary mb-0">alexa@creative-tim.com</p>
+                            <h6 class="mb-0 text-sm">KH00010</h6>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <p class="text-xs text-secondary mb-0">0909876543</p>
+                        <p class="text-xs text-secondary mb-0">Ngọc Quỳnh</p>
+                      </td>
+                      <td>
+                        <p class="text-xs text-secondary mb-0"></p>
                       </td>
                       <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold">9876543210</span>
+                        <span class="text-secondary text-xs font-weight-bold">0</span>
                       </td>
-                      <td class="align-middle text-center">
-                        <!-- Nút "Lịch sử đặt phòng" mở modal -->
-                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#historyModal1">
-                          Lịch sử đặt phòng
-                        </button>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">296,688,000</span>
                       </td>
-                      
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">296,688,000</span>
+                      </td>
                       <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#customerModal2">
+                          Thông tin
+                        </button>
                       </td>
                     </tr>
-                
-                    <!-- Khách hàng 3 -->
                     <tr>
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div>
-                            <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user3">
+                            <input type="checkbox" class="form-check-input me-3">
                           </div>
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Laurent Perrier</h6>
-                            <p class="text-xs text-secondary mb-0">laurent@creative-tim.com</p>
+                            <h6 class="mb-0 text-sm">KH00009</h6>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <p class="text-xs text-secondary mb-0">0912345678</p>
+                        <p class="text-xs text-secondary mb-0">Ngọc Quỳnh</p>
+                      </td>
+                      <td>
+                        <p class="text-xs text-secondary mb-0"></p>
                       </td>
                       <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold">1122334455</span>
+                        <span class="text-secondary text-xs font-weight-bold">0</span>
                       </td>
-                      <td class="align-middle text-center">
-                        <!-- Nút "Lịch sử đặt phòng" mở modal -->
-                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#historyModal1">
-                          Lịch sử đặt phòng
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">448,408,000</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">448,408,000</span>
+                      </td>
+                      <td class="align-middle">
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#customerModal3">
+                          Thông tin
                         </button>
                       </td>
-                      
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div>
+                            <input type="checkbox" class="form-check-input me-3">
+                          </div>
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">KH00008</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-xs text-secondary mb-0">Thanh Thảo</p>
+                      </td>
+                      <td>
+                        <p class="text-xs text-secondary mb-0"></p>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">0</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">307,528,000</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold">307,528,000</span>
+                      </td>
                       <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#customerModal4">
+                          Thông tin
+                        </button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
-
-                <!-- Modal Lịch sử đặt phòng -->
-                <div class="modal fade" id="historyModal1" tabindex="-1" aria-labelledby="historyModalLabel1" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <!-- Header Modal -->
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="historyModalLabel1">Lịch sử đặt phòng của John Michael</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <!-- Nội dung Modal -->
-                      <div class="modal-body">
-                        <!-- Lịch sử đặt phòng -->
-                        <p><strong>Ngày đặt:</strong> 01/01/2023 - 03/01/2023</p>
-                        <p><strong>Phòng:</strong> Phòng 101 - Đơn</p>
-                        <p><strong>Giá:</strong> 400.000đ/đêm</p>
-                        <p><strong>Thanh toán:</strong> Đã thanh toán 400.000đ</p>
-
-                        <hr>
-
-                        <p><strong>Ngày đặt:</strong> 15/02/2023 - 17/02/2023</p>
-                        <p><strong>Phòng:</strong> Phòng 102 - VIP</p>
-                        <p><strong>Giá:</strong> 700.000đ/đêm</p>
-                        <p><strong>Thanh toán:</strong> Đã thanh toán 700.000đ</p>
-
-                        <!-- Các thông tin lịch sử đặt phòng khác -->
-                      </div>
-                      <!-- Footer Modal -->
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
         </div>
       </div>
+      
+      <!-- Modal Thông tin Khách hàng 1 -->
+      <div class="modal fade" id="customerModal1" tabindex="-1" aria-labelledby="customerModalLabel1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="customerModalLabel1">Thông tin</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+              <div class="col-md-6" style="flex: 1; min-width: 0;">
+                <div style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                  <div style="height: 200px; border: 1px solid #ddd; margin-bottom: 10px;">
+                    <i class="fas fa-mountain fa-2x text-muted" style="position: relative; top: 50%; transform: translateY(-50%);"></i>
+                  </div>
+                  <p><strong>Mã khách hàng:</strong> KH00011</p>
+                  <p><strong>Tên khách:</strong> Minh Tri</p>
+                  <p><strong>CMND:</strong> N/A</p>
+                  <p><strong>Nhóm KH:</strong> N/A</p>
+                  <p><strong>Mã số thuế:</strong> N/A</p>
+                  <p><strong>Email:</strong> N/A</p>
+                </div>
+              </div>
+              <div class="col-md-6" style="flex: 1; min-width: 0; padding-left: 20px;">
+                <p><strong>Điện thoại:</strong></p>
+                <p><strong>Quốc tịch:</strong></p>
+                <p><strong>Địa chỉ:</strong></p>
+                <p><strong>Khách vãng:</strong></p>
+                <p><strong>Phương thức:</strong></p>
+                <p><strong>Ghi chú:</strong> <input type="text" class="form-control" placeholder="Nhập ghi chú"></p>
+              </div>
+            </div>
+            <div class="modal-footer" style="justify-content: flex-end; gap: 10px; padding: 10px;">
+              <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-check"></i> Cập nhật</button>
+              <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-ban"></i> Ngừng hoạt động</button>
+              <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Xóa</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal Thông tin Khách hàng 2 -->
+      <div class="modal fade" id="customerModal2" tabindex="-1" aria-labelledby="customerModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="customerModalLabel2">Thông tin</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+              <div class="col-md-6" style="flex: 1; min-width: 0;">
+                <div style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                  <div style="height: 200px; border: 1px solid #ddd; margin-bottom: 10px;">
+                    <i class="fas fa-mountain fa-2x text-muted" style="position: relative; top: 50%; transform: translateY(-50%);"></i>
+                  </div>
+                  <p><strong>Mã khách hàng:</strong> KH00010</p>
+                  <p><strong>Tên khách:</strong> Ngọc Quỳnh</p>
+                  <p><strong>CMND:</strong> N/A</p>
+                  <p><strong>Nhóm KH:</strong> N/A</p>
+                  <p><strong>Mã số thuế:</strong> N/A</p>
+                  <p><strong>Email:</strong> N/A</p>
+                </div>
+              </div>
+              <div class="col-md-6" style="flex: 1; min-width: 0; padding-left: 20px;">
+                <p><strong>Điện thoại:</strong></p>
+                <p><strong>Quốc tịch:</strong></p>
+                <p><strong>Địa chỉ:</strong></p>
+                <p><strong>Khách vãng:</strong></p>
+                <p><strong>Phương thức:</strong></p>
+                <p><strong>Ghi chú:</strong> <input type="text" class="form-control" placeholder="Nhập ghi chú"></p>
+              </div>
+            </div>
+            <div class="modal-footer" style="justify-content: flex-end; gap: 10px; padding: 10px;">
+              <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-check"></i> Cập nhật</button>
+              <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-ban"></i> Ngừng hoạt động</button>
+              <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Xóa</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal Thông tin Khách hàng 3 -->
+      <div class="modal fade" id="customerModal3" tabindex="-1" aria-labelledby="customerModalLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="customerModalLabel3">Thông tin</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+              <div class="col-md-6" style="flex: 1; min-width: 0;">
+                <div style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                  <div style="height: 200px; border: 1px solid #ddd; margin-bottom: 10px;">
+                    <i class="fas fa-mountain fa-2x text-muted" style="position: relative; top: 50%; transform: translateY(-50%);"></i>
+                  </div>
+                  <p><strong>Mã khách hàng:</strong> KH00009</p>
+                  <p><strong>Tên khách:</strong> Ngọc Quỳnh</p>
+                  <p><strong>CMND:</strong> N/A</p>
+                  <p><strong>Nhóm KH:</strong> N/A</p>
+                  <p><strong>Mã số thuế:</strong> N/A</p>
+                  <p><strong>Email:</strong> N/A</p>
+                </div>
+              </div>
+              <div class="col-md-6" style="flex: 1; min-width: 0; padding-left: 20px;">
+                <p><strong>Điện thoại:</strong></p>
+                <p><strong>Quốc tịch:</strong></p>
+                <p><strong>Địa chỉ:</strong></p>
+                <p><strong>Khách vãng:</strong></p>
+                <p><strong>Phương thức:</strong></p>
+                <p><strong>Ghi chú:</strong> <input type="text" class="form-control" placeholder="Nhập ghi chú"></p>
+              </div>
+            </div>
+            <div class="modal-footer" style="justify-content: flex-end; gap: 10px; padding: 10px;">
+              <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-check"></i> Cập nhật</button>
+              <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-ban"></i> Ngừng hoạt động</button>
+              <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Xóa</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal Thông tin Khách hàng 4 -->
+      <div class="modal fade" id="customerModal4" tabindex="-1" aria-labelledby="customerModalLabel4" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="customerModalLabel4">Thông tin</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+              <div class="col-md-6" style="flex: 1; min-width: 0;">
+                <div style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                  <div style="height: 200px; border: 1px solid #ddd; margin-bottom: 10px;">
+                    <i class="fas fa-mountain fa-2x text-muted" style="position: relative; top: 50%; transform: translateY(-50%);"></i>
+                  </div>
+                  <p><strong>Mã khách hàng:</strong> KH00008</p>
+                  <p><strong>Tên khách:</strong> Thanh Thảo</p>
+                  <p><strong>CMND:</strong> N/A</p>
+                  <p><strong>Nhóm KH:</strong> N/A</p>
+                  <p><strong>Mã số thuế:</strong> N/A</p>
+                  <p><strong>Email:</strong> N/A</p>
+                </div>
+              </div>
+              <div class="col-md-6" style="flex: 1; min-width: 0; padding-left: 20px;">
+                <p><strong>Điện thoại:</strong></p>
+                <p><strong>Quốc tịch:</strong></p>
+                <p><strong>Địa chỉ:</strong></p>
+                <p><strong>Khách vãng:</strong></p>
+                <p><strong>Phương thức:</strong></p>
+                <p><strong>Ghi chú:</strong> <input type="text" class="form-control" placeholder="Nhập ghi chú"></p>
+              </div>
+            </div>
+            <div class="modal-footer" style="justify-content: flex-end; gap: 10px; padding: 10px;">
+              <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-check"></i> Cập nhật</button>
+              <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-ban"></i> Ngừng hoạt động</button>
+              <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Xóa</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--Quản lý Phòng-->
       <div class="row">
         <div class="col-12">
           <div class="card my-4">
@@ -480,251 +641,267 @@
               <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
                 <div class="d-flex justify-content-between">
                   <h6 class="text-white text-capitalize ps-3">Quản lý phòng</h6>
-                  <!-- Nút thêm phòng -->
                   <button class="btn btn-success mb-0" data-bs-toggle="modal" data-bs-target="#addRoomModal" style="margin-right: 30px;">
                     <i class="material-icons">+</i>
                   </button>
                 </div>
               </div>
             </div>
-            
             <div class="card-body px-0 pb-2">
               <div class="table-responsive p-0">
                 <table class="table align-items-center justify-content-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên phòng</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Loại phòng</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tình trạng</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày check-in</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày check-out</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giá</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <input type="checkbox" class="me-2">
+                        Tên Phòng
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Khu vực</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Giá giờ</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Giá cả ngày</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Giá qua đêm</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Trạng thái</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Ghi chú</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Chi nhánh</th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     <!-- Phòng 101 -->
-                    <tr>
+                    <tr data-bs-toggle="collapse" data-bs-target="#roomDetails101" class="accordion-toggle">
                       <td>
                         <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/room-1.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="room1">
-                          </div>
+                          <input type="checkbox" class="me-2">
                           <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Phòng 101</h6>
+                            <h6 class="mb-0 text-sm">P.503</h6>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <p class="text-xs font-weight-bold mb-0">Đơn</p>
+                        <p class="text-xs font-weight-bold mb-0">Tầng 2</p>
                       </td>
                       <td>
-                        <span class="text-xs font-weight-bold text-success">Trống</span>
+                        <p class="text-xs font-weight-bold mb-0">200,000</p>
                       </td>
-                      <td class="text-center">
-                        <span class="text-secondary text-xs font-weight-bold">23/04/2023</span>
+                      <td>
+                        <p class="text-xs font-weight-bold mb-0">800,000</p>
                       </td>
-                      <td class="text-center">
-                        <span class="text-secondary text-xs font-weight-bold">24/04/2023</span>
+                      <td>
+                        <p class="text-xs font-weight-bold mb-0">800,000</p>
                       </td>
-                      <td class="text-center">
-                        <span class="text-xs font-weight-bold">400.000đ/đêm</span>
+                      <td>
+                        <span class="text-xs font-weight-bold text-success">Đang hoạt động</span>
+                      </td>
+                      <td>
+                        <p class="text-xs font-weight-bold mb-0"></p>
+                      </td>
+                      <td>
+                        <p class="text-xs font-weight-bold mb-0">Chi nhánh trung tâm</p>
                       </td>
                       <td class="align-middle">
                         <button class="btn btn-link text-secondary mb-0" data-bs-toggle="modal" data-bs-target="#editRoomModal1">
-                          Sửa
+                          Cập nhật
+                        </button>
+                        <button class="btn btn-link text-danger mb-0" data-bs-toggle="modal" data-bs-target="#disableRoomModal1">
+                          Ngưng hoạt động
                         </button>
                         <button class="btn btn-link text-secondary mb-0" data-bs-toggle="modal" data-bs-target="#deleteRoomModal1">
                           Xóa
                         </button>
                       </td>
                     </tr>
-            
-                    <!-- Phòng 102 -->
+                    <!-- Expandable Details for Phòng 101 -->
                     <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/room-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="room2">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Phòng 102</h6>
+                      <td colspan="9" class="p-0">
+                        <div class="collapse" id="roomDetails101">
+                          <div class="card card-body border-0">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img src="../assets/img/room-1.jpg" class="img-fluid rounded" alt="room1">
+                              </div>
+                              <div class="col-md-8">
+                                <p><strong>Tên phòng:</strong> P.503</p>
+                                <p><strong>Bắt đầu sử dụng:</strong> 27/04/2025</p>
+                                <p><strong>Hạng phòng:</strong> Phòng 02 giường đơn</p>
+                                <p><strong>Ghi chú:</strong></p>
+                                <p><strong>Chi nhánh:</strong> Chi nhánh trung tâm</p>
+                                <p><strong>Khu vực:</strong> Tầng 2</p>
+                                <p><strong>Giá giờ:</strong> 200,000</p>
+                                <p><strong>Giá cả ngày:</strong> 800,000</p>
+                                <p><strong>Giá qua đêm:</strong> 800,000</p>
+                                <p><strong>Phụ thu qua giờ:</strong> Tính tiền mỗi giờ</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">VIP</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold text-danger">Đã đặt</span>
-                      </td>
-                      <td class="text-center">
-                        <span class="text-secondary text-xs font-weight-bold">25/04/2023</span>
-                      </td>
-                      <td class="text-center">
-                        <span class="text-secondary text-xs font-weight-bold">26/04/2023</span>
-                      </td>
-                      <td class="text-center">
-                        <span class="text-xs font-weight-bold">700.000đ/đêm</span>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0" data-bs-toggle="modal" data-bs-target="#editRoomModal2">
-                          Sửa
-                        </button>
-                        <button class="btn btn-link text-secondary mb-0" data-bs-toggle="modal" data-bs-target="#deleteRoomModal2">
-                          Xóa
-                        </button>
-                      </td>
-                    </tr>
-            
-                    <!-- Phòng 103 -->
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/room-3.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="room3">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Phòng 103</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Đôi</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold text-success">Trống</span>
-                      </td>
-                      <td class="text-center">
-                        <span class="text-secondary text-xs font-weight-bold">26/04/2023</span>
-                      </td>
-                      <td class="text-center">
-                        <span class="text-secondary text-xs font-weight-bold">27/04/2023</span>
-                      </td>
-                      <td class="text-center">
-                        <span class="text-xs font-weight-bold">500.000đ/đêm</span>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0" data-bs-toggle="modal" data-bs-target="#editRoomModal3">
-                          Sửa
-                        </button>
-                        <button class="btn btn-link text-secondary mb-0" data-bs-toggle="modal" data-bs-target="#deleteRoomModal3">
-                          Xóa
-                        </button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
-            
-
+      
             <!-- Modal Thêm Phòng -->
-<div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addRoomModalLabel">Thêm phòng mới</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="roomName" class="form-label">Tên phòng</label>
-            <input type="text" class="form-control" id="roomName" placeholder="Nhập tên phòng">
-          </div>
-          <div class="mb-3">
-            <label for="roomType" class="form-label">Loại phòng</label>
-            <select class="form-select" id="roomType">
-              <option selected>Đơn</option>
-              <option>VIP</option>
-              <option>Đôi</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="roomPrice" class="form-label">Giá phòng</label>
-            <input type="number" class="form-control" id="roomPrice" placeholder="Nhập giá phòng">
-          </div>
-          <div class="mb-3">
-            <label for="roomStatus" class="form-label">Tình trạng phòng</label>
-            <select class="form-select" id="roomStatus">
-              <option selected>Trống</option>
-              <option>Đã đặt</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="roomImage" class="form-label">Hình ảnh phòng</label>
-            <input type="file" class="form-control" id="roomImage" accept="image/*">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-        <button type="button" class="btn btn-primary">Lưu phòng</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-            <!-- Modal Sửa Phòng -->
-            <!-- Modal 1 -->
-            <div class="modal fade" id="editRoomModal1" tabindex="-1" aria-labelledby="editRoomModalLabel1" aria-hidden="true">
-              <div class="modal-dialog">
+            <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="editRoomModalLabel1">Sửa thông tin Phòng 101</h5>
+                    <h5 class="modal-title" id="addRoomModalLabel">Phòng</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <div class="modal-body">
-                    <form>
-                      <div class="mb-3">
-                        <label for="roomName" class="form-label">Tên phòng</label>
-                        <input type="text" class="form-control" id="roomName" value="Phòng 101">
-                      </div>
-                      <div class="mb-3">
-                        <label for="roomType" class="form-label">Loại phòng</label>
-                        <select class="form-select" id="roomType">
-                          <option selected>Đơn</option>
-                          <option>VIP</option>
-                          <option>Đôi</option>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label for="roomPrice" class="form-label">Giá</label>
-                        <input type="text" class="form-control" id="roomPrice" value="400.000đ/đêm">
-                      </div>
-                      <div class="mb-3">
-                        <label for="roomStatus" class="form-label">Tình trạng phòng</label>
-                        <select class="form-select" id="roomStatus">
-                          <option selected>Trống</option>
-                          <option>Đã đặt</option>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label for="checkinDate" class="form-label">Ngày check-in</label>
-                        <input type="date" class="form-control" id="checkinDate" value="2023-04-23">
-                      </div>
-                      <div class="mb-3">
-                        <label for="checkoutDate" class="form-label">Ngày check-out</label>
-                        <input type="date" class="form-control" id="checkoutDate" value="2023-04-24">
-                      </div>
-                    </form>
+                  <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                    <div class="col-md-6" style="flex: 1; min-width: 0;">
+                      <form>
+                        <div class="mb-3">
+                          <label for="roomName" class="form-label">Tên phòng <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="roomName" placeholder="abc" style="width: 100%;">
+                        </div>
+                        <div class="mb-3">
+                          <label for="roomArea" class="form-label">Khu vực</label>
+                          <div class="input-group" style="width: 100%;">
+                            <select class="form-select" id="roomArea" style="flex-grow: 1;">
+                              <option selected>Tầng 2</option>
+                              <option>Tầng 3</option>
+                              <option>Tầng 4</option>
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" style="padding: 0 10px;"><i class="fas fa-plus"></i></button>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="roomType" class="form-label">Hạng phòng <span class="text-danger">*</span></label>
+                          <div class="input-group" style="width: 100%;">
+                            <select class="form-select" id="roomType" style="flex-grow: 1;">
+                              <option selected>Phòng 02 giường đơn</option>
+                              <option>Phòng 01 giường đôi và 1 giường đơn cho 3 người</option>
+                              <option>Phòng 01 giường đơn</option>
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" style="padding: 0 10px;"><i class="fas fa-plus"></i></button>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="startDate" class="form-label">Bắt đầu sử dụng</label>
+                          <div class="input-group" style="width: 100%;">
+                            <input type="date" class="form-control" id="startDate" value="2025-05-04" style="flex-grow: 1;">
+                            <button type="button" class="btn btn-outline-secondary" style="padding: 0 10px;"><i class="fas fa-calendar-alt"></i></button>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="roomNotes" class="form-label">Ghi chú</label>
+                          <textarea class="form-control" id="roomNotes" rows="3" style="width: 100%;"></textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col-md-6" style="flex: 1; min-width: 0; padding-left: 20px;">
+                      <p style="margin-bottom: 15px;"><strong>Phòng sẽ được áp dụng theo giá của hạng phòng:</strong></p>
+                      <ul class="list-unstyled" style="margin-bottom: 20px;">
+                        <li><strong>Giá giờ:</strong> 180,000</li>
+                        <li><strong>Giá cả ngày:</strong> 720,000</li>
+                        <li><strong>Giá qua đêm:</strong> 720,000</li>
+                        <li><strong>Phụ thu qua giờ:</strong> Tính tiền mỗi giờ</li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                  <div class="modal-footer" style="justify-content: flex-start; gap: 10px; padding: 10px;">
+                    <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="padding: 5px 15px;"><i class="fas fa-times"></i> Bỏ qua</button>
                   </div>
                 </div>
               </div>
             </div>
-            
+
+            <!-- Modal Sửa Phòng -->
+            <div class="modal fade" id="editRoomModal1" tabindex="-1" aria-labelledby="editRoomModalLabel1" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editRoomModalLabel1">Sửa thông tin phòng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                    <div class="col-md-6" style="flex: 1; min-width: 0;">
+                      <form>
+                        <div class="mb-3">
+                          <label for="roomName" class="form-label">Tên phòng <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="roomName" value="P.503" style="width: 100%;">
+                        </div>
+                        <div class="mb-3">
+                          <label for="roomArea" class="form-label">Khu vực</label>
+                          <div class="input-group" style="width: 100%;">
+                            <select class="form-select" id="roomArea" style="flex-grow: 1;">
+                              <option selected>Tầng 2</option>
+                              <option>Tầng 3</option>
+                              <option>Tầng 4</option>
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" style="padding: 0 10px;"><i class="fas fa-plus"></i></button>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="roomType" class="form-label">Hạng phòng <span class="text-danger">*</span></label>
+                          <div class="input-group" style="width: 100%;">
+                            <select class="form-select" id="roomType" style="flex-grow: 1;">
+                              <option selected>Phòng 02 giường đơn</option>
+                              <option>Phòng 01 giường đôi và 1 giường đơn cho 3 người</option>
+                              <option>Phòng 01 giường đơn</option>
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" style="padding: 0 10px;"><i class="fas fa-plus"></i></button>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="startDate" class="form-label">Bắt đầu sử dụng</label>
+                          <div class="input-group" style="width: 100%;">
+                            <input type="date" class="form-control" id="startDate" value="2025-04-27" style="flex-grow: 1;">
+                            <button type="button" class="btn btn-outline-secondary" style="padding: 0 10px;"><i class="fas fa-calendar-alt"></i></button>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="roomNotes" class="form-label">Ghi chú</label>
+                          <textarea class="form-control" id="roomNotes" rows="3" style="width: 100%;"></textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col-md-6" style="flex: 1; min-width: 0; padding-left: 20px;">
+                      <p style="margin-bottom: 15px;"><strong>Phòng sẽ được áp dụng theo giá của hạng phòng:</strong></p>
+                      <ul class="list-unstyled" style="margin-bottom: 20px;">
+                        <li><strong>Giá giờ:</strong> 200,000</li>
+                        <li><strong>Giá cả ngày:</strong> 800,000</li>
+                        <li><strong>Giá qua đêm:</strong> 800,000</li>
+                        <li><strong>Phụ thu qua giờ:</strong> Tính tiền mỗi giờ</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="modal-footer" style="justify-content: flex-start; gap: 10px; padding: 10px;">
+                    <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="padding: 5px 15px;"><i class="fas fa-times"></i> Bỏ qua</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Modal Ngưng Hoạt Động -->
+            <div class="modal fade" id="disableRoomModal1" tabindex="-1" aria-labelledby="disableRoomModalLabel1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="disableRoomModalLabel1">Ngưng hoạt động Phòng 02 giường đơn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    Bạn có chắc chắn muốn ngưng hoạt động phòng này không?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger">Ngưng hoạt động</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
             <!-- Modal Xóa Phòng -->
-            <!-- Modal 1 -->
             <div class="modal fade" id="deleteRoomModal1" tabindex="-1" aria-labelledby="deleteRoomModalLabel1" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="deleteRoomModalLabel1">Xóa Phòng 101</h5>
+                    <h5 class="modal-title" id="deleteRoomModalLabel1">Xóa Phòng 02 giường đơn</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
@@ -737,10 +914,184 @@
                 </div>
               </div>
             </div>
-            
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card my-4">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                  <h6 class="text-white text-capitalize ps-3">Dịch vụ</h6>
+                </div>
+              </div>
+              <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                  <table class="table align-items-center mb-0">
+                    <thead>
+                      <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                          <input type="checkbox" class="form-check-input"> Mã hàng hóa
+                        </th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên hàng</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giá bán</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giá vốn</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tồn kho</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
+                        <th class="text-secondary opacity-7"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="d-flex px-2 py-1">
+                            <div>
+                              <input type="checkbox" class="form-check-input me-3">
+                            </div>
+                            <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm">SP000016</h6>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="text-xs text-secondary mb-0">Thuê xe máy (Ngày)</p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="text-secondary text-xs font-weight-bold">150,000</span>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="text-secondary text-xs font-weight-bold">0</span>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="text-secondary text-xs font-weight-bold">---</span>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="badge badge-sm bg-gradient-success">Cho phép kinh doanh</span>
+                        </td>
+                        <td class="align-middle">
+                          <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#serviceModal1">
+                            Thông tin
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="d-flex px-2 py-1">
+                            <div>
+                              <input type="checkbox" class="form-check-input me-3">
+                            </div>
+                            <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm">SP000017</h6>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="text-xs text-secondary mb-0">Thuê oto (Ngày)</p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="text-secondary text-xs font-weight-bold">2,000,000</span>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="text-secondary text-xs font-weight-bold">0</span>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="text-secondary text-xs font-weight-bold">---</span>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <span class="badge badge-sm bg-gradient-success">Cho phép kinh doanh</span>
+                        </td>
+                        <td class="align-middle">
+                          <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#serviceModal2">
+                            Thông tin
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal Thông tin Dịch vụ 1 -->
+        <div class="modal fade" id="serviceModal1" tabindex="-1" aria-labelledby="serviceModalLabel1" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="serviceModalLabel1">Thuê xe máy (Ngày)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                <div class="col-md-6" style="flex: 1; min-width: 0;">
+                  <div style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                    <div style="height: 200px; border: 1px solid #ddd; margin-bottom: 10px;">
+                      <i class="fas fa-mountain fa-2x text-muted" style="position: relative; top: 50%; transform: translateY(-50%);"></i>
+                    </div>
+                    <p><strong>Mã hàng hóa:</strong> SP000016</p>
+                    <p><strong>Thời lượng:</strong> 0 Phút</p>
+                    <p><strong>Nhóm hàng:</strong> Dịch vụ</p>
+                    <p><strong>Loại hàng:</strong> Dịch vụ</p>
+                    <p><strong>Giá bán:</strong> 150,000</p>
+                    <p><strong>Giá vốn:</strong> 0</p>
+                  </div>
+                </div>
+                <div class="col-md-6" style="flex: 1; min-width: 0; padding-left: 20px;">
+                  <p><strong>Mô Tả:</strong> <input type="text" class="form-control" placeholder="Nhập mô tả"></p>
+                  <p><strong>Ghi chú:</strong> <input type="text" class="form-control" placeholder="Nhập ghi chú"></p>
+                </div>
+              </div>
+              <div class="modal-footer" style="justify-content: flex-end; gap: 10px; padding: 10px;">
+                <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-check"></i> Cập nhật</button>
+                <button type="button" class="btn btn-secondary" style="padding: 5px 15px;"><i class="fas fa-barcode"></i> In mã vạch</button>
+                <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-ban"></i> Ngừng kinh doanh</button>
+                <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Xóa</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal Thông tin Dịch vụ 2 -->
+        <div class="modal fade" id="serviceModal2" tabindex="-1" aria-labelledby="serviceModalLabel2" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="serviceModalLabel2">Thuê oto (Ngày)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                <div class="col-md-6" style="flex: 1; min-width: 0;">
+                  <div style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                    <div style="height: 200px; border: 1px solid #ddd; margin-bottom: 10px;">
+                      <i class="fas fa-mountain fa-2x text-muted" style="position: relative; top: 50%; transform: translateY(-50%);"></i>
+                    </div>
+                    <p><strong>Mã hàng hóa:</strong> SP000017</p>
+                    <p><strong>Thời lượng:</strong> 0 Phút</p>
+                    <p><strong>Nhóm hàng:</strong> Dịch vụ</p>
+                    <p><strong>Loại hàng:</strong> Dịch vụ</p>
+                    <p><strong>Giá bán:</strong> 2,000,000</p>
+                    <p><strong>Giá vốn:</strong> 0</p>
+                  </div>
+                </div>
+                <div class="col-md-6" style="flex: 1; min-width: 0; padding-left: 20px;">
+                  <p><strong>Mô Tả:</strong> <input type="text" class="form-control" placeholder="Nhập mô tả"></p>
+                  <p><strong>Ghi chú:</strong> <input type="text" class="form-control" placeholder="Nhập ghi chú"></p>
+                </div>
+              </div>
+              <div class="modal-footer" style="justify-content: flex-end; gap: 10px; padding: 10px;">
+                <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-check"></i> Cập nhật</button>
+                <button type="button" class="btn btn-secondary" style="padding: 5px 15px;"><i class="fas fa-barcode"></i> In mã vạch</button>
+                <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-ban"></i> Ngừng kinh doanh</button>
+                <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Xóa</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      
+
+
       <footer class="footer py-4  ">
         <div class="container-fluid">
           <div class="row align-items-center justify-content-lg-between">
