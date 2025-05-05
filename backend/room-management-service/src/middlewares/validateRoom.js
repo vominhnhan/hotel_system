@@ -2,11 +2,21 @@ import validator from "validator";
 import { ERROR_MESSAGES, ROOM_STATUSES } from "../common/constants.js";
 
 const validateRoom = (req, res, next) => {
-  const { name, type_id, price, description, status } = req.body;
+  const {
+    name,
+    type_id,
+    hourly_price,
+    daily_price,
+    overnight_price,
+    description,
+    status,
+  } = req.body;
 
   // Kiểm tra các trường bắt buộc
-  if (!name || !type_id || !price || !description) {
-    return res.status(400).json({ error: ERROR_MESSAGES.MISSING_REQUIRED_FIELDS });
+  if (!name?.trim() || !type_id?.trim() || !description?.trim()) {
+    return res
+      .status(400)
+      .json({ error: ERROR_MESSAGES.MISSING_REQUIRED_FIELDS });
   }
 
   // Kiểm tra type_id là UUID hợp lệ
@@ -14,14 +24,21 @@ const validateRoom = (req, res, next) => {
     return res.status(400).json({ error: ERROR_MESSAGES.INVALID_UUID });
   }
 
-  // Kiểm tra price phải là số dương
-  if (typeof price !== 'number' || price <= 0) {
-    return res.status(400).json({ error: ERROR_MESSAGES.INVALID_PRICE });
+  // Kiểm tra các giá phải là số dương (nếu có)
+  const priceFields = { hourly_price, daily_price, overnight_price };
+  for (const [key, value] of Object.entries(priceFields)) {
+    if (value !== undefined && (typeof value !== "number" || value <= 0)) {
+      return res.status(400).json({ error: ERROR_MESSAGES.INVALID_PRICE });
+    }
   }
 
   // Kiểm tra status (nếu có)
   if (status && !Object.values(ROOM_STATUSES).includes(status)) {
-    return res.status(400).json({ error: `${ERROR_MESSAGES.STATUS_NOT_FOUND}: status phải là một trong: ${Object.values(ROOM_STATUSES).join(', ')}` });
+    return res.status(400).json({
+      error: `${ERROR_MESSAGES.STATUS_NOT_FOUND}: status phải là một trong: ${Object.values(
+        ROOM_STATUSES
+      ).join(", ")}`,
+    });
   }
 
   next();

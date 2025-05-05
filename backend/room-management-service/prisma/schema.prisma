@@ -11,7 +11,7 @@ datasource db {
 model RoomType {
   id        String   @id @default(uuid())
   name      String   @db.VarChar(255)
-  created_at DateTime @default(now())12
+  created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   rooms     Room[]   @relation("RoomTypeToRooms")
 
@@ -26,7 +26,9 @@ model Room {
   description String      @db.Text
   type_id     String
   status      RoomStatus
-  price       Float       @db.Double
+  hourly_price    Float?      @db.Double // Giá theo giờ
+  daily_price     Float?      @db.Double // Giá theo ngày
+  overnight_price Float?      @db.Double // Giá qua đêm 
   is_cleaned  Boolean     @default(true)
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt

@@ -5,10 +5,10 @@ import { ERROR_MESSAGES, ROOM_STATUSES } from "../common/constants.js";
 const roomService = {
   // Tạo phòng mới
   createRoom: async (req) => {
-    const { name, type_id, price, description, status, is_cleaned } = req.body;
+    const { name, type_id, hourly_price, daily_price, overnight_price, description, status, is_cleaned } = req.body;
 
     // Kiểm tra các trường bắt buộc
-    if (!name || !type_id || !price || !description) {
+    if (!name || !type_id || !description) {
       throw new Error(ERROR_MESSAGES.MISSING_REQUIRED_FIELDS);
     }
 
@@ -17,8 +17,14 @@ const roomService = {
       throw new Error(ERROR_MESSAGES.INVALID_UUID);
     }
 
-    // Kiểm tra price phải là số dương
-    if (typeof price !== 'number' || price <= 0) {
+    // Kiểm tra các giá phải là số dương (nếu có)
+    if (hourly_price !== undefined && (typeof hourly_price !== 'number' || hourly_price <= 0)) {
+      throw new Error(ERROR_MESSAGES.INVALID_PRICE);
+    }
+    if (daily_price !== undefined && (typeof daily_price !== 'number' || daily_price <= 0)) {
+      throw new Error(ERROR_MESSAGES.INVALID_PRICE);
+    }
+    if (overnight_price !== undefined && (typeof overnight_price !== 'number' || overnight_price <= 0)) {
       throw new Error(ERROR_MESSAGES.INVALID_PRICE);
     }
 
@@ -35,7 +41,9 @@ const roomService = {
           connect: { id: type_id }, // Kết nối với loại phòng qua type_id
         },
         status: status || ROOM_STATUSES.AVAILABLE, // Mặc định là AVAILABLE
-        price,
+        hourly_price,
+        daily_price,
+        overnight_price,
         is_cleaned: is_cleaned ?? true, // Mặc định là true nếu không cung cấp
       },
       include: {
@@ -69,7 +77,7 @@ const roomService = {
   // Cập nhật phòng theo ID
   updateRoom: async (req) => {
     const { id } = req.params;
-    const { name, type_id, price, description, status, is_cleaned } = req.body;
+    const { name, type_id, hourly_price, daily_price, overnight_price, description, status, is_cleaned } = req.body;
 
     // Kiểm tra xem phòng có tồn tại không
     const room = await prisma.room.findUnique({ where: { id } });
@@ -81,7 +89,13 @@ const roomService = {
     if (type_id && !validator.isUUID(type_id)) {
       throw new Error(ERROR_MESSAGES.INVALID_UUID);
     }
-    if (price && (typeof price !== 'number' || price <= 0)) {
+    if (hourly_price !== undefined && (typeof hourly_price !== 'number' || hourly_price <= 0)) {
+      throw new Error(ERROR_MESSAGES.INVALID_PRICE);
+    }
+    if (daily_price !== undefined && (typeof daily_price !== 'number' || daily_price <= 0)) {
+      throw new Error(ERROR_MESSAGES.INVALID_PRICE);
+    }
+    if (overnight_price !== undefined && (typeof overnight_price !== 'number' || overnight_price <= 0)) {
       throw new Error(ERROR_MESSAGES.INVALID_PRICE);
     }
     if (status && !Object.values(ROOM_STATUSES).includes(status)) {
@@ -93,7 +107,9 @@ const roomService = {
       data: {
         name,
         description,
-        price,
+        hourly_price,
+        daily_price,
+        overnight_price,
         status,
         is_cleaned,
         type: type_id ? { connect: { id: type_id } } : undefined,
