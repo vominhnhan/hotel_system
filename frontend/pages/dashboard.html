@@ -922,7 +922,12 @@
             <div class="card my-4">
               <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                  <h6 class="text-white text-capitalize ps-3">Dịch vụ</h6>
+                  <div class="d-flex justify-content-between">
+                    <h6 class="text-white text-capitalize ps-3">Quản lý phòng</h6>
+                    <button class="btn btn-success mb-0" data-bs-toggle="modal" data-bs-target="#addServiceModal" style="margin-right: 30px;">
+                      <i class="material-icons">+</i>
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="card-body px-0 pb-2">
@@ -1087,6 +1092,91 @@
             </div>
           </div>
         </div>
+
+        <!-- Modal Thêm Dịch Vụ -->
+        <div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addServiceModalLabel">Thêm dịch vụ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <ul class="nav nav-tabs mb-3" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">Thông tin</button>
+                  </li>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane fade show active" id="info" role="tabpanel">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">Mã hàng hóa</label>
+                          <input type="text" class="form-control" placeholder="Mã hàng tự động" disabled>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Tên hàng</label>
+                          <input type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Thời lượng</label>
+                          <div class="input-group">
+                            <input type="number" class="form-control">
+                            <span class="input-group-text">Phút</span>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Nhóm hàng</label>
+                          <div class="input-group">
+                            <select class="form-select">
+                              <option>--Lựa chọn--</option>
+                              <option>Dịch vụ</option>
+                              <option>Đồ ăn</option>
+                              <option>Đồ uống</option>
+                            </select>
+                            <button class="btn btn-outline-secondary"><i class="fas fa-plus"></i></button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">Giá vốn</label>
+                          <input type="number" class="form-control" value="0">
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Giá bán</label>
+                          <input type="number" class="form-control" value="0">
+                        </div>
+                        <div class="mb-3 form-check mt-4">
+                          <input class="form-check-input" type="checkbox" id="directSale" checked>
+                          <label class="form-check-label" for="directSale">Bán trực tiếp</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Hình ảnh</label>
+                      <div class="d-flex flex-wrap gap-2">
+                        <div class="border border-1 rounded p-3" style="width: 100px; height: 100px;"><i class="fas fa-image fa-2x text-muted d-block text-center"></i></div>
+                        <div class="border border-1 rounded p-3" style="width: 100px; height: 100px;"><i class="fas fa-image fa-2x text-muted d-block text-center"></i></div>
+                        <div class="border border-1 rounded p-3" style="width: 100px; height: 100px;"><i class="fas fa-image fa-2x text-muted d-block text-center"></i></div>
+                        <div class="border border-1 rounded p-3" style="width: 100px; height: 100px;"><i class="fas fa-image fa-2x text-muted d-block text-center"></i></div>
+                        <div class="border border-1 rounded p-3" style="width: 100px; height: 100px;"><i class="fas fa-image fa-2x text-muted d-block text-center"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                 
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                <button type="button" class="btn btn-success"><i class="fas fa-plus"></i> Lưu & Thêm mới</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Bỏ qua</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       
