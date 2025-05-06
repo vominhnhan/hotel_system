@@ -427,7 +427,7 @@
                   <span class="badge bg-gradient-warning cleaning-status" data-room="P.203">Chưa dọn</span>
                   <span class="dots" onclick="toggleCleaningStatus('P.203', event)">⋮</span>
                 </div>
-                <div class="card card-blog card-plain position-relative khach-le" data-bs-toggle="modal" data-bs-target="#roomModal" data-room="P.203">
+                <div class="card card-blog card-plain position-relative khach-le" data-bs-toggle="modal" data-bs-target="#checkoutModal" data-room="P.203">
                   <div class="card-body p-3">
                     <h6 class="mb-1">P.203</h6>
                     <span class="badge bg-gradient-info">Khách lẻ</span>
@@ -442,7 +442,7 @@
                   <span class="badge bg-gradient-success cleaning-status" data-room="P.301">Sạch</span>
                   <span class="dots" onclick="toggleCleaningStatus('P.301', event)">⋮</span>
                 </div>
-                <div class="card card-blog card-plain position-relative khach-le" data-bs-toggle="modal" data-bs-target="#roomModal" data-room="P.301">
+                <div class="card card-blog card-plain position-relative khach-le" data-bs-toggle="modal" data-bs-target="#checkoutModal" data-room="P.301">
                   <div class="card-body p-3">
                     <h6 class="mb-1">P.301</h6>
                     <span class="badge bg-gradient-info">Khách lẻ</span>
@@ -491,7 +491,7 @@
         </div>
       </div>
     
-      <!-- Modal -->
+      <!-- Modal Check In-->
       <div class="modal fade" id="roomModal" tabindex="-1" aria-labelledby="roomModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -560,6 +560,151 @@
         </div>
       </div>
     
+      <!-- Modal Check Out -->
+      <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 720px">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="checkoutModalLabel">Chi tiết P.202</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="border rounded p-3 mb-4">
+                <h6><strong>Phòng 01 giường đôi cho 2 người</strong> <span class="badge bg-success ms-2">Đang sử dụng</span> <i class="ms-1 text-success bi bi-cash"></i></h6>
+                <div class="row mt-3">
+                  <div class="col-sm-6">
+                    <p><strong>Khách hàng</strong><br>Khách lẻ</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <p><strong>Khách lưu trú</strong><br>0 người lớn, 0 trẻ em, 0 giấy tờ</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <p><strong>Mã đặt phòng</strong><br>DP000002</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <p><strong>Nhận phòng</strong><br>05 Thg 05, 09:27</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <p><strong>Trả phòng</strong><br>05 Thg 05, 21:27</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <p><strong>Thời gian lưu trú</strong><br>12 giờ <span class="badge bg-light text-dark">Đã sử dụng: 38 giờ 7 phút</span></p>
+                  </div>
+                </div>
+              </div>
+              <div class="row align-items-center">
+                <div class="col-6">
+                  <p class="mb-1"><strong>P.202</strong></p>
+                  <h5 class="mb-0">2,160,000</h5>
+                </div>
+                <div class="col-6 text-end">
+                  <p class="mb-1 text-muted">Khách đã trả</p>
+                  <h5 class="mb-0">0</h5>
+                </div>
+              </div>
+              <hr>
+              <div class="text-end">
+                <button class="btn btn-outline-success me-2">Sửa đặt phòng</button>
+                <button class="btn btn-success" id="checkoutBtn">Trả phòng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+      <!-- Payment Modal for Check-in/Check-out -->
+      <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" style="margin-left:auto; margin-right:0;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Thanh toán DP000021 - Khách lẻ</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Hạng mục</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Phòng 01 giường đôi cho 2 người</td>
+                        <td id="durationHours">1 giờ</td>
+                        <td id="unitPrice">180,000</td>
+                        <td><strong id="totalPrice">180,000</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-2">
+                    <label class="form-label">Nhân viên tạo HD</label>
+                    <select class="form-select">
+                      <option selected>hao222</option>
+                    </select>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Phòng</label>
+                    <select class="form-select" id="roomSelector">
+                      <option>P.201</option>
+                      <option selected>P.202</option>
+                      <option>P.203</option>
+                    </select>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Thời gian tạo HD</label>
+                    <input type="datetime-local" class="form-control" value="2025-05-06T23:24">
+                  </div>
+                  <hr>
+                  <div class="border-top border-bottom py-2 mb-3">
+                    <p class="mb-1">Tổng cộng: <strong id="grandTotal">180,000</strong></p>
+                    <p class="mb-1">Giảm giá: <strong>0</strong></p>
+                    <p class="mb-1">Thu khác: <strong>0</strong></p>
+                    <p class="mb-0">Còn cần trả: <strong class="text-success" id="remainingAmount">180,000</strong></p>
+                  </div>
+                  <hr>
+                  <div class="mb-3">
+                    <h6>Phương thức thanh toán</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <div class="form-check me-3">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="cash" checked>
+                        <label class="form-check-label" for="cash">Tiền mặt</label>
+                      </div>
+                      <div class="form-check me-3">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="bank">
+                        <label class="form-check-label" for="bank">Chuyển khoản</label>
+                      </div>
+                    </div>
+                    <div class="bg-light rounded p-3">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>Khách thanh toán</span>
+                        <input id="customerPayment" type="text" class="form-control form-control-sm w-50 text-end fw-bold" value="0">
+                      </div>
+                      <div class="border-top pt-2">
+                        <span class="text-muted">Tiền thừa trả khách</span>
+                        <h5 class="text-success mb-0" id="changeDue">-180,000</h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="btn btn-success w-100" id="completePayment">Hoàn thành</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       
     <footer class="footer py-4  ">
       <div class="container-fluid">
@@ -764,6 +909,20 @@
         statusElement.classList.add('bg-gradient-success');
       }
     }
+
+    document.getElementById('bookRoom').addEventListener('click', function () {
+      var paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+      paymentModal.show();
+    });
+
+
+    document.getElementById('checkoutBtn').addEventListener('click', function () {
+      const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
+      if (checkoutModal) checkoutModal.hide(); // Ẩn modal hiện tại
+  
+      const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+      paymentModal.show(); // Hiện modal thanh toán
+    });
   </script>
 
 </body>

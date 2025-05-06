@@ -333,7 +333,7 @@
     
     <!-- Payment Modal -->
     <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" style="max-width: 65vw">
+      <div class="modal-dialog modal-xl" style="margin-left:auto; margin-right:0;">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Thêm mới Hóa đơn - Khách lẻ</h5>
@@ -399,10 +399,12 @@
                   <input type="datetime-local" class="form-control" value="2025-05-04T22:13">
                 </div>
                 <hr>
-                <p><strong>Tổng cộng:</strong> 3,185,000</p>
-                <p><strong>Giảm giá:</strong> 0</p>
-                <p><strong>Thu khác:</strong> 0</p>
-                <p><strong>Còn cần trả:</strong> <span class="text-success">3,185,000</span></p>
+                <div class="border-top border-bottom py-2 mb-3">
+                  <p class="mb-1">Tổng cộng: <strong>3,185,000</strong></p>
+                  <p class="mb-1">Giảm giá: <strong>0</strong></p>
+                  <p class="mb-1">Thu khác: <strong>0</strong></p>
+                  <p class="mb-0">Còn cần trả: <strong class="text-success">3,185,000</strong></p>
+                </div>
                 <hr>
                   <!-- Payment Method Section Updated -->
                   <div class="mb-3">
@@ -419,12 +421,14 @@
                   </div>
                   <div class="bg-light rounded p-3">
                   <div class="d-flex justify-content-between align-items-center mb-3">
-                  <span>Khách thanh toán</span>
-                  <input type="text" class="form-control form-control-sm w-50 text-end fw-bold" value="33,185,000">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <span>Khách thanh toán</span>
+                      <input id="customerPayment" type="text" class="form-control form-control-sm w-50 text-end fw-bold" value="3185000">
+                    </div>
                   </div>
                   <div class="border-top pt-2">
-                  <span class="text-muted">Tiền thừa trả khách</span>
-                  <h5 class="text-success mb-0">29,800,000</h5>
+                    <span class="text-muted">Tiền thừa trả khách</span>
+                    <h5 class="text-success mb-0" id="changeDue"></h5>
                   </div>
                   </div>
                   </div>
@@ -437,148 +441,7 @@
         </div>
       </div>
     </div>
-      <!-- Payment Modal -->
-      <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-            <div class="modal-header">
-                  <h5 class="modal-title">Thêm mới Hóa đơn - Khách lẻ</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                  <div class="row">
-                  <div class="col-lg-8">
-                  <div class="table-responsive">
-                        <table class="table table-bordered">
-                        <thead class="bg-light">
-                        <tr>
-                              <th>STT</th>
-                              <th>Hạng mục</th>
-                              <th>Số lượng</th>
-                              <th>Đơn giá</th>
-                              <th>Thành tiền</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                              <td>1</td>
-                              <td>Đánh golf (Ngày)</td>
-                              <td>1</td>
-                              <td>3,000,000</td>
-                              <td><strong>3,000,000</strong></td>
-                        </tr>
-                        <tr>
-                              <td>2</td>
-                              <td>Thịt bò khô (Gói)</td>
-                              <td>1</td>
-                              <td>80,000</td>
-                              <td><strong>80,000</strong></td>
-                        </tr>
-                        <tr>
-                              <td>3</td>
-                              <td>Bia Heneiken (Lon)</td>
-                              <td>3</td>
-                              <td>35,000</td>
-                              <td><strong>105,000</strong></td>
-                        </tr>
-                        </tbody>
-                        </table>
-                  </div>
-                  </div>
-                  <div class="col-lg-4">
-                  <div class="mb-3">
-                        <label class="form-label">Nhân viên tạo HD</label>
-                        <select class="form-select">
-                        <option>gia hao</option>
-                        </select>
-                  </div>
-                  <div class="mb-3">
-                        <label class="form-label">Thời gian tạo HD</label>
-                        <input type="datetime-local" class="form-control" value="2025-05-04T22:13">
-                  </div>
-                  <div class="border-top border-bottom py-2 mb-3">
-                        <p class="mb-1">Tổng cộng: <strong>3,185,000</strong></p>
-                        <p class="mb-1">Giảm giá: <strong>0</strong></p>
-                        <p class="mb-1">Thu khác: <strong>0</strong></p>
-                        <p class="mb-0">Còn cần trả: <strong class="text-success">3,185,000</strong></p>
-                  </div>
-                  <!-- Payment Method Section Updated -->
-                  <div class="mb-3">
-                    <h6>Phương thức thanh toán</h6>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="paymentMethod" id="cash" checked>
-                        <label class="form-check-label" for="cash">Tiền mặt</label>
-                      </div>
-                      <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="paymentMethod" id="card">
-                        <label class="form-check-label" for="card">Thẻ</label>
-                      </div>
-                      <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="paymentMethod" id="bank">
-                        <label class="form-check-label" for="bank">Chuyển khoản</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentMethod" id="wallet">
-                        <label class="form-check-label" for="wallet">Ví điện tử</label>
-                      </div>
-                    </div>
-                    <div class="bg-light rounded p-3">
-                      <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span>Khách thanh toán</span>
-                        <input id="customerPayment" type="text" class="form-control form-control-sm w-50 text-end fw-bold" value="3185000">
-                      </div>
-                      <div class="border-top pt-2">
-                        <span class="text-muted">Tiền thừa trả khách</span>
-                        <h5 class="text-success mb-0" id="changeDue">0</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <button class="btn btn-success w-100">Hoàn thành</button>
-                  </div>
-                  
-                </div>
-              </div>
-            </div>
-      </div>
-        
-
-
-
-      <footer class="footer py-4  ">
-        <div class="container-fluid">
-          <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-              <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
-                made with <i class="fa fa-heart"></i> by
-                <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
-                for a better web.
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                <li class="nav-item">
-                  <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+      
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
@@ -674,32 +537,38 @@
   <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 
   <script>
-      function parseCurrency(str) {
-        return parseInt(str.replaceAll(',', '').replaceAll('.', '')) || 0;
+    document.addEventListener('DOMContentLoaded', function () {
+      const customerInput = document.getElementById('customerPayment');
+      const changeDue = document.getElementById('changeDue');
+  
+      // Tổng cần thanh toán (lấy động nếu cần thiết)
+      const totalToPay = 3185000;
+  
+      function formatCurrency(amount) {
+        return amount.toLocaleString('vi-VN');
       }
-    
-      function formatCurrency(num) {
-        return num.toLocaleString('vi-VN');
+  
+      function updateChangeDue() {
+        // Bỏ định dạng, giữ lại số
+        const raw = customerInput.value.replace(/[^0-9]/g, '');
+        const paid = parseInt(raw || '0');
+        const change = paid - totalToPay;
+  
+        if (!isNaN(change)) {
+          changeDue.textContent = change > 0 ? formatCurrency(change) : '0';
+        } else {
+          changeDue.textContent = '0';
+        }
       }
-    
-      function calculateTotalAndChange() {
-        let total = 0;
-        document.querySelectorAll("tbody tr").forEach(row => {
-          const amountCell = row.querySelector("td:last-child");
-          if (amountCell) {
-            total += parseCurrency(amountCell.textContent);
-          }
-        });
-        
-        const customerPaid = parseCurrency(document.getElementById("customerPayment").value);
-        const change = customerPaid - total;
-    
-        document.getElementById("changeDue").textContent = formatCurrency(change > 0 ? change : 0);
-      }
-    
-      document.getElementById("customerPayment").addEventListener("input", calculateTotalAndChange);
-      document.addEventListener("DOMContentLoaded", calculateTotalAndChange);
-    </script>
+  
+      customerInput.addEventListener('input', updateChangeDue);
+  
+      // Gọi lần đầu nếu đã có giá trị
+      updateChangeDue();
+    });
+  </script>
+  
+  
     
 </body>
 
