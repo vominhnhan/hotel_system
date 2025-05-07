@@ -643,7 +643,7 @@
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="room-table-body">
                     <!-- Phòng 101 -->
                     <tr data-bs-toggle="collapse" data-bs-target="#roomDetails101" class="accordion-toggle">
                       <td>
@@ -900,7 +900,7 @@
               <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
                   <div class="d-flex justify-content-between">
-                    <h6 class="text-white text-capitalize ps-3">Quản lý phòng</h6>
+                    <h6 class="text-white text-capitalize ps-3">Quản Lý Dịch vụ</h6>
                     <button class="btn btn-success mb-0" data-bs-toggle="modal" data-bs-target="#addServiceModal" style="margin-right: 30px;">
                       <i class="material-icons">+</i>
                     </button>
@@ -923,7 +923,7 @@
                         <th class="text-secondary opacity-7"></th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody  id="service-table-body">
                       <tr>
                         <td>
                           <div class="d-flex px-2 py-1">
@@ -1024,8 +1024,6 @@
                 </div>
               </div>
               <div class="modal-footer" style="justify-content: flex-end; gap: 10px; padding: 10px;">
-                <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-check"></i> Cập nhật</button>
-                <button type="button" class="btn btn-secondary" style="padding: 5px 15px;"><i class="fas fa-barcode"></i> In mã vạch</button>
                 <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-ban"></i> Ngừng kinh doanh</button>
                 <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Xóa</button>
               </div>
@@ -1061,8 +1059,6 @@
                 </div>
               </div>
               <div class="modal-footer" style="justify-content: flex-end; gap: 10px; padding: 10px;">
-                <button type="button" class="btn btn-success" style="padding: 5px 15px;"><i class="fas fa-check"></i> Cập nhật</button>
-                <button type="button" class="btn btn-secondary" style="padding: 5px 15px;"><i class="fas fa-barcode"></i> In mã vạch</button>
                 <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-ban"></i> Ngừng kinh doanh</button>
                 <button type="button" class="btn btn-danger" style="padding: 5px 15px;"><i class="fas fa-trash"></i> Xóa</button>
               </div>
@@ -1519,6 +1515,220 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      try {
+        const response = await fetchWithAuth("http://localhost:3003/api/rooms");
+    
+        if (!response.ok) throw new Error("Network response was not ok");
+        const rooms = await response.json();
+    
+        const tableBody = document.querySelector("#room-table-body");
+        tableBody.innerHTML = "";
+    
+        rooms.forEach((room, index) => {
+          const rowId = `roomDetails${index}`;
+        
+          const mainRow = `
+            <tr data-bs-toggle="collapse" data-bs-target="#${rowId}" class="accordion-toggle">
+              <td>
+                <div class="d-flex px-2">
+                  <input type="checkbox" class="me-2">
+                  <div class="my-auto">
+                    <h6 class="mb-0 text-sm">${room.name}</h6>
+                  </div>
+                </div>
+              </td>
+              <td><p class="text-xs font-weight-bold mb-0">—</p></td>
+              <td><p class="text-xs font-weight-bold mb-0">${room.hourly_price.toLocaleString()}</p></td>
+              <td><p class="text-xs font-weight-bold mb-0">${room.daily_price.toLocaleString()}</p></td>
+              <td><p class="text-xs font-weight-bold mb-0">${room.overnight_price.toLocaleString()}</p></td>
+              <td><span class="text-xs font-weight-bold ${room.status === 'AVAILABLE' ? 'text-success' : 'text-danger'}">${room.status}</span></td>
+              <td><p class="text-xs font-weight-bold mb-0">${room.note || ""}</p></td>
+              <td><p class="text-xs font-weight-bold mb-0">${room.branch || "Chi nhánh chính"}</p></td>
+              <td class="align-middle">
+                <button class="btn btn-link text-secondary mb-0 btn-edit-room" 
+                  data-id="${room._id}"
+                  data-name="${room.name}"
+                  data-area="${room.area}"
+                  data-type="${room.description}"
+                  data-start="${room.start_date}" 
+                  data-note="${room.note || ''}"">
+                  Cập nhật
+                </button>
+                <button class="btn btn-link text-danger mb-0 btn-disable-room" data-id="${room._id}">Ngưng hoạt động</button>
+                <button class="btn btn-link text-secondary mb-0 btn-delete-room" data-id="${room._id}">Xoá</button>
+              </td>
+
+            </tr>
+          `;
+        
+          const expandRow = `
+            <tr>
+              <td colspan="9" class="p-0">
+                <div class="collapse" id="${rowId}">
+                  <div class="card card-body border-0">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img src="../assets/img/room-1.jpg" class="img-fluid rounded" alt="room">
+                      </div>
+                      <div class="col-md-8">
+                        <p><strong>Tên phòng:</strong> ${room.name}</p>
+                        <p><strong>Hạng phòng:</strong> ${room.description}</p>
+                        <p><strong>Giá giờ:</strong> ${room.hourly_price.toLocaleString()}</p>
+                        <p><strong>Giá cả ngày:</strong> ${room.daily_price.toLocaleString()}</p>
+                        <p><strong>Giá qua đêm:</strong> ${room.overnight_price.toLocaleString()}</p>
+                        <p><strong>Ghi chú:</strong> ${room.note || ""}</p>
+                        <p><strong>Chi nhánh:</strong> ${room.branch || "Chi nhánh chính"}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          `;
+        
+          tableBody.insertAdjacentHTML("beforeend", mainRow + expandRow);
+        });
+        
+      } catch (err) {
+        console.error("Failed to fetch rooms:", err);
+      }
+    });
+    function fetchWithAuth(url, options = {}) {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Bạn chưa đăng nhập hoặc token đã hết hạn!");
+        window.location.href = "../pages/sign-in.html";
+        return;
+      }
+    
+      return fetch(url, {
+        ...options,
+        headers: {
+          ...(options.headers || {}),
+          "Authorization": `Bearer ${token}`
+        }
+      });    
+    }
+  </script>
+  
+  <script>
+    document.addEventListener("click", async function (e) {
+      const roomId = e.target.dataset.id;
+    
+      // CẬP NHẬT
+      if (e.target.classList.contains("btn-edit-room")) {
+        console.log("Open edit modal for", roomId);
+        
+        // Mở modal có sẵn
+        const modal = new bootstrap.Modal(document.getElementById("editRoomModal1"));
+        modal.show();
+      }
+      // Truy cập các input theo ID
+      document.getElementById("roomName").value = e.target.dataset.name;
+      document.getElementById("roomArea").value = e.target.dataset.area;
+      document.getElementById("roomType").value = e.target.dataset.type;
+      document.getElementById("startDate").value = e.target.dataset.start;
+      document.getElementById("roomNotes").value = e.target.dataset.note;
+
+      
+    
+      // NGƯNG HOẠT ĐỘNG
+      if (e.target.classList.contains("btn-disable-room")) {
+        if (confirm("Bạn có chắc chắn muốn ngưng hoạt động phòng này?")) {
+          try {
+            const res = await fetchWithAuth(`http://localhost:3003/api/rooms/${roomId}/disable`, {
+              method: "PUT"
+            });
+            if (res.ok) {
+              alert("Đã ngưng hoạt động phòng!");
+              location.reload();
+            } else {
+              alert("Lỗi khi ngưng hoạt động phòng.");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Lỗi kết nối đến máy chủ.");
+          }
+        }
+      }
+    
+      // XOÁ
+      if (e.target.classList.contains("btn-delete-room")) {
+        if (confirm("Bạn có chắc chắn muốn xóa phòng này?")) {
+          try {
+            const res = await fetchWithAuth(`http://localhost:3003/api/rooms/${roomId}`, {
+              method: "DELETE"
+            });
+            if (res.ok) {
+              alert("Đã xóa phòng!");
+              location.reload();
+            } else {
+              alert("Lỗi khi xóa phòng.");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Lỗi kết nối đến máy chủ.");
+          }
+        }
+      }
+    });
+
+
+    async function fetchServices() {
+      try {
+        const response = await fetchWithAuth("http://localhost:3005/api/services");
+        if (!response.ok) throw new Error(`Lỗi HTTP! trạng thái: ${response.status}`);
+        const services = await response.json();
+        console.log("Dữ liệu dịch vụ:", services); // Ghi log dữ liệu để kiểm tra
+    
+        const tableBody = document.querySelector("#service-table-body");
+        tableBody.innerHTML = "";
+    
+        services.forEach((service, index) => {
+          const row = `
+            <tr>
+              <td>
+                <div class="d-flex px-2 py-1">
+                  <div><input type="checkbox" class="form-check-input me-3"></div>
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm">${service.id || 'N/A'}</h6>
+                  </div>
+                </div>
+              </td>
+              <td><p class="text-xs text-secondary mb-0">${service.name || 'N/A'}</p></td>
+              <td class="align-middle text-center text-sm">
+                <span class="text-secondary text-xs font-weight-bold">${service.price?.toLocaleString() || 'N/A'}</span>
+              </td>
+              <td class="align-middle text-center text-sm">
+                <span class="text-secondary text-xs font-weight-bold">0</span> <!-- Giả định cost_price là 0 nếu không có -->
+              </td>
+              <td class="align-middle text-center text-sm">
+                <span class="text-secondary text-xs font-weight-bold">---</span> <!-- Không có stock, để mặc định -->
+              </td>
+              <td class="align-middle text-center text-sm">
+                <span class="badge badge-sm bg-gradient-success">Cho phép kinh doanh</span> <!-- Giả định mặc định là ACTIVE -->
+              </td>
+              <td class="align-middle">
+                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#serviceModal${index + 1}">
+                  Thông tin
+                </button>
+              </td>
+            </tr>
+          `;
+          tableBody.insertAdjacentHTML("beforeend", row);
+        });
+      } catch (err) {
+        console.error("Lỗi khi tải dịch vụ:", err);
+        alert("Không thể tải danh sách dịch vụ. Vui lòng kiểm tra kết nối hoặc máy chủ API.");
+      }
+    }
+    fetchServices();
+    
+    </script>
+    
 </body>
 
 </html>
