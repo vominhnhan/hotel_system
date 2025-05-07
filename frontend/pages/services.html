@@ -377,7 +377,7 @@
                   <p class="mb-1">Tổng cộng: <strong id="modal-total">0</strong></p>
                   <p class="mb-1">Giảm giá: <strong>0</strong></p>
                   <p class="mb-1">Thu khác: <strong>0</strong></p>
-                  <p class="mb-0">Còn cần trả: <strong class="text-success" id="amount-due">0</strong></p>
+                  <p class="mb-0">Còn cần trả: <strong class="text-success" id="remainingAmount">0</strong></p>
                 </div>
                 <hr>
                   <!-- Payment Method Section Updated -->
@@ -394,16 +394,14 @@
                   </div>
                   </div>
                   <div class="bg-light rounded p-3">
-                  <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                       <span>Khách thanh toán</span>
                       <input id="customerPayment" type="text" class="form-control form-control-sm w-50 text-end fw-bold" value="0">
                     </div>
-                  </div>
-                  <div class="border-top pt-2">
-                    <span class="text-muted">Tiền thừa trả khách</span>
-                    <h5 class="text-success mb-0" id="changeDue"></h5>
-                  </div>
+                    <div class="border-top pt-2">
+                      <span class="text-muted">Tiền thừa trả khách</span>
+                      <h5 class="text-success mb-0" id="changeDue">-180,000</h5>
+                    </div>
                   </div>
                   </div>
                   <div>
@@ -513,112 +511,74 @@
     var invoiceItems = [];
   </script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const customerInput = document.getElementById('customerPayment');
-      const changeDue = document.getElementById('changeDue');
-  
-      // Tổng cần thanh toán (lấy động nếu cần thiết)
-      const totalToPay = 3185000;
-  
-      function formatCurrency(amount) {
-        return amount.toLocaleString('vi-VN');
+    // ======================= Combined Script Start =======================
+    
+    document.addEventListener("DOMContentLoaded", async () => {
+      const customerInput = document.getElementById("customerPayment");
+      const changeDue = document.getElementById("changeDue");
+      const roomSelect = document.getElementById("room-select");
+      const container = document.querySelector("#service-list");
+      const buttons = document.querySelectorAll("[data-category]");
+      let allServices = [];
+      window.invoiceItems = []; // ensure global
+    
+      // Tổng cần thanh toán (đọc từ modal nếu có)
+      function parseCurrency(value) {
+        return parseInt(value.replace(/[^0-9]/g, "")) || 0;
       }
-  
+    
+      function formatCurrency(amount) {
+        return amount.toLocaleString("vi-VN");
+      }
+    
+      function updateChangeDue() {
+        const totalAmount = parseCurrency(document.getElementById("modal-total").textContent || "0");
+        const customerPayment = parseCurrency(document.getElementById("customerPayment").value);
+        const change = customerPayment - totalAmount;
+    
+        const changeDisplay = document.getElementById("changeDue");
+        changeDisplay.innerText = formatCurrency(change);
+        changeDisplay.classList.toggle("text-danger", change < 0);
+        changeDisplay.classList.toggle("text-success", change >= 0);
+      }
+    
+      // Event binding cho input khách thanh toán
+      if (customerInput) {
+        customerInput.addEventListener("input", updateChangeDue);
+        updateChangeDue();
+      }
+    
+      // Load phòng AVAILABLE
       async function loadRooms() {
-        const select = document.getElementById("room-select");
         try {
           const res = await fetchWithAuth("http://localhost:3003/api/rooms");
           const contentType = res.headers.get("content-type");
           if (!contentType || !contentType.includes("application/json")) {
-            throw new Error("Phản hồi không phải JSON: " + await res.text());
+            throw new Error("Phản hồi không phải JSON: " + (await res.text()));
           }
-      
+    
           const rooms = await res.json();
-          
-          // 👉 Lọc chỉ phòng AVAILABLE
-          const availableRooms = rooms.filter(room => room.status === "AVAILABLE");
-      
-          select.innerHTML = `<option disabled selected>Chọn phòng</option>`;
-          availableRooms.forEach(room => {
+          const availableRooms = rooms.filter((room) => room.status === "AVAILABLE");
+    
+          roomSelect.innerHTML = `<option disabled selected>Chọn phòng</option>`;
+          availableRooms.forEach((room) => {
             const opt = document.createElement("option");
             opt.value = room.id;
             opt.textContent = room.name;
-            select.appendChild(opt);
+            roomSelect.appendChild(opt);
           });
-      
         } catch (error) {
           console.error("Lỗi khi tải phòng:", error);
-          select.innerHTML = `<option disabled selected>Không thể tải danh sách phòng</option>`;
+          roomSelect.innerHTML = `<option disabled selected>Không thể tải danh sách phòng</option>`;
         }
       }
-      
-      
-      loadRooms();
-
-      
-      function updateChangeDue() {
-        const customerInput = document.getElementById('customerPayment');
-        const changeDue = document.getElementById('changeDue');
-        const amountDueEl = document.getElementById('amount-due');
     
-        if (!customerInput || !changeDue || !amountDueEl) return;
+      // Gọi khi DOM ready
+      if (roomSelect) loadRooms();
     
-        const raw = customerInput.value.replace(/[^0-9]/g, '');
-        const paid = parseInt(raw || '0');
-        const total = invoiceItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        const change = paid - total;
-    
-        amountDueEl.textContent = formatCurrency(total);
-        changeDue.textContent = !isNaN(change) && change > 0 ? formatCurrency(change) : '0';
-      }
-      
-  
-      customerInput.addEventListener('input', updateChangeDue);
-  
-      // Gọi lần đầu nếu đã có giá trị
-      updateChangeDue();
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-      const customerInput = document.getElementById('customerPayment');
-      if (customerInput) {
-        customerInput.addEventListener('input', updateChangeDue);
-        updateChangeDue();
-      }
-    });
-  </script>
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-  
-      try {
-        const payloadBase64 = token.split('.')[1];
-        const decoded = JSON.parse(atob(payloadBase64));
-        const role = decoded.role;
-  
-        // Ẩn mục "Quản lý" nếu không phải MANAGER
-        if (role !== "MANAGER") {
-          const managerSection = document.getElementById("manager-section");
-          if (managerSection) {
-            managerSection.style.display = "none";
-          }
-        }
-  
-      } catch (err) {
-        console.error("Token không hợp lệ", err);
-      }
-    });
-  </script>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const container = document.querySelector("#service-list");
-      const buttons = document.querySelectorAll("[data-category]");
-      let allServices = [];
-  
+      // ===== Dịch vụ - Hóa đơn =====
       function renderServices(servicesToRender) {
-        container.innerHTML = ""; // Clear cũ
+        container.innerHTML = "";
         servicesToRender.forEach((service) => {
           const card = document.createElement("div");
           card.className = "col-6 mb-3";
@@ -627,7 +587,7 @@
               <img src="../assets/img/items/default.jpg" class="card-img-top rounded" style="height: 80px; object-fit: cover;">
               <div class="card-body p-2">
                 <p class="text-sm mb-1">${service.name}</p>
-                <h6 class="text-success">${Number(service.price).toLocaleString('vi-VN')}</h6>
+                <h6 class="text-success">${Number(service.price).toLocaleString("vi-VN")}</h6>
               </div>
             </div>
           `;
@@ -635,26 +595,21 @@
           container.appendChild(card);
         });
       }
-
-      function formatCurrency(amount) {
-        return amount.toLocaleString('vi-VN');
-      }
-      
+    
       function renderInvoice() {
         const tbody = document.querySelector("#invoice-body");
         const totalEl = document.querySelector("#total-amount");
-      
         const modalTbody = document.querySelector("#modal-invoice-body");
         const modalTotal = document.querySelector("#modal-total");
-      
+    
         tbody.innerHTML = "";
         modalTbody.innerHTML = "";
-      
+    
         let total = 0;
         invoiceItems.forEach((item, index) => {
           const itemTotal = item.price * item.quantity;
           total += itemTotal;
-      
+    
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${index + 1}</td>
@@ -664,7 +619,7 @@
             <td class="text-end">${formatCurrency(itemTotal)}</td>
           `;
           tbody.appendChild(row);
-      
+    
           const modalRow = document.createElement("tr");
           modalRow.innerHTML = `
             <td>${index + 1}</td>
@@ -675,58 +630,65 @@
           `;
           modalTbody.appendChild(modalRow);
         });
-      
+    
         totalEl.textContent = formatCurrency(total);
         modalTotal.textContent = formatCurrency(total);
+        const remainingAmountEl = document.getElementById("remainingAmount");
+        if (remainingAmountEl) remainingAmountEl.textContent = formatCurrency(total);
 
-        // Cập nhật luôn "Còn cần trả" + "Tiền thừa"
         updateChangeDue();
       }
-      
-      
+    
       function addToInvoice(service) {
-        const existing = invoiceItems.find(item => item.name === service.name);
+        const existing = invoiceItems.find((item) => item.name === service.name);
         if (existing) {
           existing.quantity += 1;
         } else {
-          invoiceItems.push({
-            name: service.name,
-            price: service.price,
-            quantity: 1
-          });
+          invoiceItems.push({ name: service.name, price: service.price, quantity: 1 });
         }
-      
         renderInvoice();
       }
-  
+    
       try {
         const response = await fetchWithAuth("http://localhost:3005/api/services");
         allServices = await response.json();
-        renderServices(allServices); // render mặc định tất cả
-  
-        buttons.forEach(btn => {
+        renderServices(allServices);
+    
+        buttons.forEach((btn) => {
           btn.addEventListener("click", () => {
             const selected = btn.getAttribute("data-category");
-  
-            // Toggle button styles
-            buttons.forEach(b => b.classList.remove("btn-dark", "text-white"));
-            buttons.forEach(b => b.classList.add("btn-outline-dark"));
+    
+            // Toggle styles
+            buttons.forEach((b) => b.classList.remove("btn-dark", "text-white"));
+            buttons.forEach((b) => b.classList.add("btn-outline-dark"));
             btn.classList.remove("btn-outline-dark");
             btn.classList.add("btn-dark", "text-white");
-  
-            const filtered = selected === "Tất cả"
-              ? allServices
-              : allServices.filter(s => s.category === selected);
-  
+    
+            const filtered = selected === "Tất cả" ? allServices : allServices.filter((s) => s.category === selected);
             renderServices(filtered);
           });
         });
-  
-      } catch (error) {
-        console.error("Lỗi khi load dịch vụ:", error);
+      } catch (err) {
+        console.error("Lỗi khi load dịch vụ:", err);
+      }
+    
+      // Role-based hide for manager UI
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const payloadBase64 = token.split(".")[1];
+          const decoded = JSON.parse(atob(payloadBase64));
+          if (decoded.role !== "MANAGER") {
+            const managerSection = document.getElementById("manager-section");
+            if (managerSection) managerSection.style.display = "none";
+          }
+        } catch (err) {
+          console.error("Token không hợp lệ", err);
+        }
       }
     });
-
+    
+    // Shared fetch with auth
     function fetchWithAuth(url, options = {}) {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -739,12 +701,14 @@
         ...options,
         headers: {
           ...(options.headers || {}),
-          "Authorization": `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
     }
-  </script>
-  
+    
+    // ======================= Combined Script End =======================
+    </script>
+    
   
   
     

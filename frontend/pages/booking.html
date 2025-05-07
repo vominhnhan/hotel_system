@@ -394,6 +394,37 @@
                 </div>
                 <div class="col-6">
                   <div class="input-group input-group-static mb-3">
+                    <label>Tên khách hàng</label>
+                    <input type="text" class="form-control" id="customerName" placeholder="Nguyễn Văn A">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group input-group-static mb-3">
+                    <label>Số điện thoại</label>
+                    <input type="tel" class="form-control" id="customerPhone" placeholder="090xxxxxxx">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group input-group-static mb-3">
+                    <label>Số CCCD</label>
+                    <input type="tel" class="form-control" id="customerID" placeholder="xxxxxxxxxx">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group input-group-static mb-3">
+                    <label>Email</label>
+                    <input type="text" class="form-control" id="customerEmail" placeholder="abc123@gmail.com">
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="input-group input-group-static mb-3">
+                    <label>Ghi chú</label>
+                    <textarea class="form-control" id="customerNote" rows="2" placeholder="Yêu cầu đặc biệt..."></textarea>
+                  </div>
+                </div>
+                
+                <div class="col-6">
+                  <div class="input-group input-group-static mb-3">
                     <label>Nhận phòng</label>
                     <input type="datetime-local" class="form-control" id="checkInTime" value="2025-05-04T19:36">
                   </div>
@@ -406,10 +437,15 @@
                 </div>
                 <div class="col-6">
                   <div class="input-group input-group-static mb-3">
-                    <label>Thời gian</label>
-                    <input type="text" class="form-control" id="duration" value="1 giờ" readonly>
+                    <label>Hình thức</label>
+                    <select class="form-control" id="rentalType">
+                      <option value="hourly">Thuê theo giờ</option>
+                      <option value="overnight">Thuê qua đêm</option>
+                      <option value="daily">Thuê theo ngày</option>
+                    </select>
                   </div>
                 </div>
+                
                 <div class="col-6">
                   <div class="input-group input-group-static mb-3">
                     <label>Giá</label>
@@ -730,49 +766,73 @@
       const priceField = document.getElementById('price');
       const amountField = document.getElementById('amountToPay');
       const modalTitle = document.getElementById('roomModalLabel');
+      const rentalType = document.getElementById('rentalType');
+      const checkInTime = document.getElementById('checkInTime');
+      const checkOutTime = document.getElementById('checkOutTime');
     
       let allRoomsData = [];
     
-      // Lưu lại tất cả dữ liệu phòng sau khi fetch
+      // Function tính giá
+      function updateDuration() {
+        const selectedRoom = allRoomsData.find(room => room.name === roomSelect.value);
+        if (!selectedRoom) return;
+      
+        const checkIn = new Date(checkInTime.value);
+        const checkOut = new Date(checkOutTime.value);
+        const diffMs = checkOut - checkIn;
+        const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24)); // Làm tròn lên cho mỗi ngày
+      
+        const rental = rentalType.value;
+        let basePrice = 0;
+        let totalPrice = 0;
+      
+        if (rental === 'hourly') {
+          basePrice = selectedRoom.hourly_price;
+          totalPrice = basePrice * diffHours;
+        } else if (rental === 'overnight') {
+          basePrice = selectedRoom.overnight_price;
+          // Mỗi 24h xem như là 1 đêm
+          const nights = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+          totalPrice = basePrice * nights;
+        } else if (rental === 'daily') {
+          basePrice = selectedRoom.daily_price;
+          totalPrice = basePrice * diffDays;
+        }
+      
+        priceField.value = basePrice.toLocaleString();
+        amountField.value = totalPrice.toLocaleString();
+      }
+      
+    
+      // Khi fetch xong room
       fetchWithAuth("http://localhost:3003/api/rooms")
         .then(response => response.json())
         .then(rooms => {
           allRoomsData = rooms;
         });
     
+      // Khi mở modal
       roomModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const roomName = button.getAttribute('data-room');
     
-        // Cập nhật tiêu đề modal
         modalTitle.textContent = `Đặt/Nhận phòng nhanh - ${roomName}`;
-    
-        // Chọn đúng phòng trong dropdown
         roomSelect.value = roomName;
     
-        // Lấy thông tin phòng từ allRoomsData
-        const selectedRoom = allRoomsData.find(room => room.name === roomName);
-        if (selectedRoom) {
-          const hourly = selectedRoom.hourly_price?.toLocaleString() || "0";
-          priceField.value = hourly;
-          amountField.value = hourly;
-        }
+        updateDuration(); // Giá đúng khi mở
       });
+    
+      // ✅ Các event thay đổi sẽ cập nhật giá ngay
+      rentalType.addEventListener('change', updateDuration);
+      checkInTime.addEventListener('change', updateDuration);
+      checkOutTime.addEventListener('change', updateDuration);
+      roomSelect.addEventListener('change', updateDuration);
     });
     
-      const roomModal = document.getElementById('roomModal');
-      roomModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const room = button.getAttribute('data-room');
-        const roomSelect = document.getElementById('roomSelect');
-        roomSelect.value = room;
-
-        // Set default values based on room
-        let price = '180,000';
-        if (room === 'P.302') price = '150,000';
-        document.getElementById('price').value = price;
-        document.getElementById('amountToPay').value = price;
-      });
+    
+    
+    
 
       // Simple duration and price update (basic logic)
       const checkInTime = document.getElementById('checkInTime');
@@ -785,16 +845,39 @@
         const checkIn = new Date(checkInTime.value);
         const checkOut = new Date(checkOutTime.value);
         const diffMs = checkOut - checkIn;
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        duration.value = `${diffHours} giờ`;
-        const basePrice = parseInt(price.value.replace(/,/g, ''));
-        amountToPay.value = (diffHours * basePrice).toLocaleString();
+        const diffHours = Math.max(Math.floor(diffMs / (1000 * 60 * 60)), 1);
+      
+        const rentalType = document.getElementById('rentalType').value;
+        const selectedRoom = allRoomsData.find(room => room.name === roomSelect.value);
+      
+        let basePrice = 0;
+        if (!selectedRoom) return;
+      
+        if (rentalType === 'hourly') {
+          basePrice = selectedRoom.hourly_price;
+        } else if (rentalType === 'overnight') {
+          basePrice = selectedRoom.overnight_price;
+        } else if (rentalType === 'daily') {
+          basePrice = selectedRoom.daily_price;
+        }
+      
+        let totalPrice = basePrice;
+        if (rentalType === 'hourly') {
+          totalPrice = diffHours * basePrice;
+        }
+      
+        price.value = basePrice.toLocaleString();
+        amountToPay.value = totalPrice.toLocaleString();
       }
+      
+      
 
       checkInTime.addEventListener('change', updateDuration);
       checkOutTime.addEventListener('change', updateDuration);
     ;
-
+    document.getElementById('rentalType').addEventListener('change', updateDuration);
+    roomSelect.addEventListener('change', updateDuration); // Nếu user đổi phòng
+    
     function toggleRoomStatus(roomId) {
       const statusElement = document.querySelector(`.position-absolute .toggle-status[data-room="${roomId}"]`);
       if (!statusElement) {
@@ -825,10 +908,52 @@
     }
 
     document.getElementById('bookRoom').addEventListener('click', function () {
-      var paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+      const name = document.getElementById('customerName').value;
+      const phone = document.getElementById('customerPhone').value;
+      const note = document.getElementById('customerNote').value;
+      const ID = document.getElementById('customerID').value;
+      const Email = document.getElementById('customerEmail').value;
+      
+      // ✅ Truyền sang modal thanh toán
+      document.querySelector('.modal-title').innerText = `Thanh toán - ${name}`;
+      document.getElementById('roomSelector').value = document.getElementById('roomSelect').value;
+    
+      const rentalType = document.getElementById('rentalType').value;
+      const duration = getRentalDuration(rentalType); // bạn sẽ tạo hàm này phía dưới
+      const unitPrice = document.getElementById('price').value;
+      const totalPrice = document.getElementById('amountToPay').value;
+    
+      // Gán vào các thẻ trong paymentModal
+      document.getElementById('durationHours').innerText = duration;
+      document.getElementById('unitPrice').innerText = unitPrice;
+      document.getElementById('totalPrice').innerText = totalPrice;
+      document.getElementById('grandTotal').innerText = totalPrice;
+      document.getElementById('remainingAmount').innerText = totalPrice;
+      document.getElementById('changeDue').innerText = `-${totalPrice}`;
+    
+      // Hiện modal thanh toán
+      const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
       paymentModal.show();
     });
-
+    
+    function getRentalDuration(type) {
+      const checkIn = new Date(document.getElementById('checkInTime').value);
+      const checkOut = new Date(document.getElementById('checkOutTime').value);
+      const diffMs = checkOut - checkIn;
+    
+      if (type === 'hourly') {
+        const hours = Math.ceil(diffMs / (1000 * 60 * 60));
+        return `${hours} giờ`;
+      } else if (type === 'overnight') {
+        const nights = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        return `${nights} đêm`;
+      } else if (type === 'daily') {
+        const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        return `${days} ngày`;
+      }
+      return '';
+    }
+    
 
     document.getElementById('checkoutBtn').addEventListener('click', function () {
       const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
@@ -960,28 +1085,28 @@
         const roomSelect = document.getElementById('roomSelect');
 
         fetchWithAuth("http://localhost:3003/api/rooms")
-  .then(response => response.json())
-  .then(rooms => {
-    const availableRooms = rooms.filter(room => room.status === "AVAILABLE");
+        .then(response => response.json())
+        .then(rooms => {
+          const availableRooms = rooms.filter(room => room.status === "AVAILABLE");
 
-    // Clear and add available rooms to select
-    roomSelect.innerHTML = '';
-    availableRooms.forEach(room => {
-      const option = document.createElement("option");
-      option.value = room.name;
-      option.textContent = `${room.description} - ${room.name}`;
-      roomSelect.appendChild(option);
-    });
+          // Clear and add available rooms to select
+          roomSelect.innerHTML = '';
+          availableRooms.forEach(room => {
+            const option = document.createElement("option");
+            option.value = room.name;
+            option.textContent = `${room.description} - ${room.name}`;
+            roomSelect.appendChild(option);
+          });
 
-    // Nếu có phòng thì gán giá trị đầu tiên cho modal
-    if (availableRooms.length > 0) {
-      roomSelect.value = availableRooms[0].name;
+          // Nếu có phòng thì gán giá trị đầu tiên cho modal
+          if (availableRooms.length > 0) {
+            roomSelect.value = availableRooms[0].name;
 
-      // Gọi hàm cập nhật giá (nếu có)
-      const evt = new CustomEvent('room-select-init', { detail: availableRooms[0] });
-      roomSelect.dispatchEvent(evt);
-    }
-  });
+            // Gọi hàm cập nhật giá (nếu có)
+            const evt = new CustomEvent('room-select-init', { detail: availableRooms[0] });
+            roomSelect.dispatchEvent(evt);
+          }
+        });
 
         function updateFilterCounts(rooms) {
           const available = rooms.filter(r => r.status === "AVAILABLE").length;
@@ -1047,6 +1172,26 @@
             "Authorization": `Bearer ${token}`
           }
         });
+      }
+      
+      document.getElementById('customerPayment').addEventListener('input', function () {
+        const customerPayment = parseCurrency(this.value);
+        const remainingAmount = parseCurrency(document.getElementById('remainingAmount').innerText);
+      
+        const change = customerPayment - remainingAmount;
+        const changeDisplay = document.getElementById('changeDue');
+      
+        changeDisplay.innerText = formatCurrency(change);
+        changeDisplay.classList.toggle('text-danger', change < 0);
+        changeDisplay.classList.toggle('text-success', change >= 0);
+      });
+
+      function parseCurrency(value) {
+        return parseInt(value.replace(/[^0-9]/g, '')) || 0;
+      }
+      
+      function formatCurrency(number) {
+        return number.toLocaleString('vi-VN');
       }
       
       </script>
