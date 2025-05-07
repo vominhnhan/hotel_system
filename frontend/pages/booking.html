@@ -329,17 +329,7 @@
     
             <!-- Floor selector and search -->
             <div class="col-12 d-flex justify-content-between mt-4">
-              <!-- Floor selector -->
-              <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="floorDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                  Tầng 2 (5)
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="floorDropdown">
-                  <li><a class="dropdown-item" href="#">Tầng 1 (0)</a></li>
-                  <li><a class="dropdown-item" href="#">Tầng 2 (5)</a></li>
-                  <li><a class="dropdown-item" href="#">Tầng 3 (0)</a></li>
-                </ul>
-              </div>
+              
     
               <!-- Search bar -->
               <div class="input-group input-group-outline w-50">
@@ -349,103 +339,16 @@
             </div>
 
             <!-- Filter buttons -->
-            <div>
-              <button class="btn btn-outline-primary me-2">Đang trống (3)</button>
-              <button class="btn btn-outline-warning me-2">Sắp nhận (0)</button>
-              <button class="btn btn-outline-success me-2">Đang sử dụng (2)</button>
-              <button class="btn btn-outline-info me-2">Qua giờ trả (2)</button>
-              <button class="btn btn-outline-primary">Chưa đến (0)</button>
+            <div id="filter-buttons" class="mb-3">
+              <button id="filter-available" class="btn btn-outline-primary me-2">Đang trống (0)</button>
+              <button id="filter-occupied" class="btn btn-outline-success me-2">Đang sử dụng (0)</button>
             </div>
+            
+            
     
             <!-- Room cards -->
             <div class="row mt-4">
-              <!-- P.201 -->
-              <div class="col-3 mb-4">
-                <div class="status-row">
-                  <span class="badge bg-gradient-success cleaning-status" data-room="P.201">Sạch</span>
-                  <span class="dots" onclick="toggleCleaningStatus('P.201', event)">⋮</span>
-                </div>
-                <div class="card card-blog card-plain position-relative sach" data-bs-toggle="modal" data-bs-target="#roomModal" data-room="P.201">
-                  <div class="card-body p-3">
-                    <h6 class="mb-1">P.201</h6>
-                    <p class="text-sm text-secondary mb-1">Phòng 01 giờ đồng đếm cho 2 ng...</p>
-                    <p class="mb-2 text-sm price-icons">
-                      <i class="fas fa-clock"></i> 180,000<br>
-                      <i class="fas fa-moon"></i> 720,000<br>
-                      <i class="fas fa-calendar-day"></i> 720,000
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- P.202 -->
-              <div class="col-3 mb-4">
-                <div class="status-row">
-                  <span class="badge bg-gradient-success cleaning-status" data-room="P.202">Sạch</span>
-                  <span class="dots" onclick="toggleCleaningStatus('P.202', event)">⋮</span>
-                </div>
-                <div class="card card-blog card-plain position-relative sach" data-bs-toggle="modal" data-bs-target="#roomModal" data-room="P.202">
-                  <div class="card-body p-3">
-                    <h6 class="mb-1">P.202</h6>
-                    <p class="text-sm text-secondary mb-1">Phòng 01 giờ đồng đếm cho 2 ng...</p>
-                    <p class="mb-2 text-sm price-icons">
-                      <i class="fas fa-clock"></i> 180,000<br>
-                      <i class="fas fa-moon"></i> 720,000<br>
-                      <i class="fas fa-calendar-day"></i> 720,000
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- P.203 -->
-              <div class="col-3 mb-4">
-                <div class="status-row">
-                  <span class="badge bg-gradient-warning cleaning-status" data-room="P.203">Chưa dọn</span>
-                  <span class="dots" onclick="toggleCleaningStatus('P.203', event)">⋮</span>
-                </div>
-                <div class="card card-blog card-plain position-relative khach-le" data-bs-toggle="modal" data-bs-target="#checkoutModal" data-room="P.203">
-                  <div class="card-body p-3">
-                    <h6 class="mb-1">P.203</h6>
-                    <span class="badge bg-gradient-info">Khách lẻ</span>
-                    <p class="text-sm text-secondary mb-1">118 giờ 4 phút / 1 giờ</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- P.301 -->
-              <div class="col-3 mb-4">
-                <div class="status-row">
-                  <span class="badge bg-gradient-success cleaning-status" data-room="P.301">Sạch</span>
-                  <span class="dots" onclick="toggleCleaningStatus('P.301', event)">⋮</span>
-                </div>
-                <div class="card card-blog card-plain position-relative khach-le" data-bs-toggle="modal" data-bs-target="#checkoutModal" data-room="P.301">
-                  <div class="card-body p-3">
-                    <h6 class="mb-1">P.301</h6>
-                    <span class="badge bg-gradient-info">Khách lẻ</span>
-                    <p class="text-sm text-secondary mb-1">118 giờ 21 phút / 1 giờ</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- P.302 -->
-              <div class="col-3 mb-4">
-                <div class="status-row">
-                  <span class="badge bg-gradient-success cleaning-status" data-room="P.302">Sạch</span>
-                  <span class="dots" onclick="toggleCleaningStatus('P.302', event)">⋮</span>
-                </div>
-                <div class="card card-blog card-plain position-relative sach" data-bs-toggle="modal" data-bs-target="#roomModal" data-room="P.302">
-                  <div class="card-body p-3">
-                    <h6 class="mb-1">P.302</h6>
-                    <p class="text-sm text-secondary mb-1">Phòng 01 giờ đồng đếm</p>
-                    <p class="mb-2 text-sm price-icons">
-                      <i class="fas fa-clock"></i> 150,000<br>
-                      <i class="fas fa-moon"></i> 600,000<br>
-                      <i class="fas fa-calendar-day"></i> 600,000
-                    </p>
-                  </div>
-                </div>
-              </div>
-
+              
             </div>
 
     
@@ -481,11 +384,11 @@
                   <div class="input-group input-group-static mb-3">
                     <label>Hạng phòng</label>
                     <select class="form-control" id="roomSelect">
-                      <option value="P.201">Phòng 01 giờ đồng đếm cho 2 người - P.201</option>
+                      <!-- <option value="P.201">Phòng 01 giờ đồng đếm cho 2 người - P.201</option>
                       <option value="P.202">Phòng 01 giờ đồng đếm cho 2 người - P.202</option>
                       <option value="P.203">Phòng 01 giờ đồng đếm cho 2 người - P.203</option>
                       <option value="P.301">Phòng 01 giờ đồng đếm cho 2 người - P.301</option>
-                      <option value="P.302">Phòng 01 giờ đồng đếm - P.302</option>
+                      <option value="P.302">Phòng 01 giờ đồng đếm - P.302</option> -->
                     </select>
                   </div>
                 </div>
@@ -823,6 +726,41 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const roomModal = document.getElementById('roomModal');
+      const roomSelect = document.getElementById('roomSelect');
+      const priceField = document.getElementById('price');
+      const amountField = document.getElementById('amountToPay');
+      const modalTitle = document.getElementById('roomModalLabel');
+    
+      let allRoomsData = [];
+    
+      // Lưu lại tất cả dữ liệu phòng sau khi fetch
+      fetch("http://localhost:3003/api/rooms")
+        .then(response => response.json())
+        .then(rooms => {
+          allRoomsData = rooms;
+        });
+    
+      roomModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const roomName = button.getAttribute('data-room');
+    
+        // Cập nhật tiêu đề modal
+        modalTitle.textContent = `Đặt/Nhận phòng nhanh - ${roomName}`;
+    
+        // Chọn đúng phòng trong dropdown
+        roomSelect.value = roomName;
+    
+        // Lấy thông tin phòng từ allRoomsData
+        const selectedRoom = allRoomsData.find(room => room.name === roomName);
+        if (selectedRoom) {
+          const hourly = selectedRoom.hourly_price?.toLocaleString() || "0";
+          priceField.value = hourly;
+          amountField.value = hourly;
+        }
+      });
+    });
+    
+      const roomModal = document.getElementById('roomModal');
       roomModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const room = button.getAttribute('data-room');
@@ -855,7 +793,7 @@
 
       checkInTime.addEventListener('change', updateDuration);
       checkOutTime.addEventListener('change', updateDuration);
-    });
+    ;
 
     function toggleRoomStatus(roomId) {
       const statusElement = document.querySelector(`.position-absolute .toggle-status[data-room="${roomId}"]`);
@@ -924,7 +862,177 @@
     });
   </script>
   
+  <!-- Fetch and display room data -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch("http://localhost:3003/api/rooms") // Thay bằng domain thật nếu deploy
+        .then(response => response.json())
+        .then(rooms => {
+          const container = document.querySelector(".row.mt-4"); // nơi chứa card phòng
+          container.innerHTML = ""; // Clear phòng mẫu cũ (nếu có)
+    
+          rooms.forEach(room => {
+            const isOccupied = room.status === "OCCUPIED";
+            const isCleaned = room.is_cleaned;
+    
+            const cardClass = isOccupied ? "khach-le" : "sach";
+            const cleaningBadge = isCleaned
+              ? `<span class="badge bg-gradient-success cleaning-status" data-room="${room.name}">Sạch</span>`
+              : `<span class="badge bg-gradient-warning cleaning-status" data-room="${room.name}">Chưa dọn</span>`;
+    
+            const statusCard = `
+              <div class="col-3 mb-4">
+                <div class="status-row">
+                  ${cleaningBadge}
+                  <span class="dots" onclick="toggleCleaningStatus('${room.name}', event)">⋮</span>
+                </div>
+                <div class="card card-blog card-plain position-relative ${cardClass}" data-bs-toggle="modal"
+                  data-bs-target="${isOccupied ? '#checkoutModal' : '#roomModal'}" data-room="${room.name}">
+                  <div class="card-body p-3">
+                    <h6 class="mb-1">${room.name}</h6>
+                    ${isOccupied ? `<span class="badge bg-gradient-info">Khách lẻ</span>` : ""}
+                    <p class="text-sm text-secondary mb-1">${room.description}</p>
+                    ${!isOccupied
+                      ? `<p class="mb-2 text-sm price-icons">
+                          <i class="fas fa-clock"></i> ${room.hourly_price.toLocaleString()}<br>
+                          <i class="fas fa-moon"></i> ${room.overnight_price.toLocaleString()}<br>
+                          <i class="fas fa-calendar-day"></i> ${room.daily_price.toLocaleString()}
+                        </p>`
+                      : ""}
+                  </div>
+                </div>
+              </div>
+            `;
+    
+            container.insertAdjacentHTML("beforeend", statusCard);
+          });
+        })
+        .catch(err => console.error("Lỗi khi tải phòng:", err));
+    });
+    </script>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const container = document.querySelector(".row.mt-4");
+        const btnAvailable = document.getElementById("filter-available");
+        const btnOccupied = document.getElementById("filter-occupied");
+        let allRooms = [];
+        let currentFilter = null; // null | 'AVAILABLE' | 'OCCUPIED'
+      
+        function renderRooms(rooms) {
+          container.innerHTML = "";
+          rooms.forEach(room => {
+            const isOccupied = room.status === "OCCUPIED";
+            const isCleaned = room.is_cleaned;
+      
+            const cardClass = isOccupied ? "khach-le" : "sach";
+            const cleaningBadge = isCleaned
+              ? `<span class="badge bg-gradient-success cleaning-status" data-room="${room.name}">Sạch</span>`
+              : `<span class="badge bg-gradient-warning cleaning-status" data-room="${room.name}">Chưa dọn</span>`;
+      
+            const cardHtml = `
+              <div class="col-3 mb-4">
+                <div class="status-row">
+                  ${cleaningBadge}
+                  <span class="dots" onclick="toggleCleaningStatus('${room.name}', event)">⋮</span>
+                </div>
+                <div class="card card-blog card-plain position-relative ${cardClass}" data-bs-toggle="modal"
+                  data-bs-target="${isOccupied ? '#checkoutModal' : '#roomModal'}" data-room="${room.name}">
+                  <div class="card-body p-3">
+                    <h6 class="mb-1">${room.name}</h6>
+                    ${isOccupied ? `<span class="badge bg-gradient-info">Khách lẻ</span>` : ""}
+                    <p class="text-sm text-secondary mb-1">${room.description}</p>
+                    ${!isOccupied
+                      ? `<p class="mb-2 text-sm price-icons">
+                          <i class="fas fa-clock"></i> ${room.hourly_price.toLocaleString()}<br>
+                          <i class="fas fa-moon"></i> ${room.overnight_price.toLocaleString()}<br>
+                          <i class="fas fa-calendar-day"></i> ${room.daily_price.toLocaleString()}
+                        </p>`
+                      : ""}
+                  </div>
+                </div>
+              </div>
+            `;
+            container.insertAdjacentHTML("beforeend", cardHtml);
+          });
+        }
+      
+        const roomSelect = document.getElementById('roomSelect');
 
+fetch("http://localhost:3003/api/rooms")
+  .then(response => response.json())
+  .then(rooms => {
+    const availableRooms = rooms.filter(room => room.status === "AVAILABLE");
+
+    // Clear and add available rooms to select
+    roomSelect.innerHTML = '';
+    availableRooms.forEach(room => {
+      const option = document.createElement("option");
+      option.value = room.name;
+      option.textContent = `${room.description} - ${room.name}`;
+      roomSelect.appendChild(option);
+    });
+
+    // Nếu có phòng thì gán giá trị đầu tiên cho modal
+    if (availableRooms.length > 0) {
+      roomSelect.value = availableRooms[0].name;
+
+      // Gọi hàm cập nhật giá (nếu có)
+      const evt = new CustomEvent('room-select-init', { detail: availableRooms[0] });
+      roomSelect.dispatchEvent(evt);
+    }
+  });
+
+        function updateFilterCounts(rooms) {
+          const available = rooms.filter(r => r.status === "AVAILABLE").length;
+          const occupied = rooms.filter(r => r.status === "OCCUPIED").length;
+      
+          btnAvailable.innerHTML = `Đang trống (${available})`;
+          btnOccupied.innerHTML = `Đang sử dụng (${occupied})`;
+        }
+      
+        function applyFilter(filter) {
+          if (currentFilter === filter) {
+            // Hủy filter
+            currentFilter = null;
+            btnAvailable.classList.remove("btn-primary");
+            btnAvailable.classList.add("btn-outline-primary");
+            btnOccupied.classList.remove("btn-success");
+            btnOccupied.classList.add("btn-outline-success");
+            renderRooms(allRooms);
+          } else {
+            currentFilter = filter;
+            const filtered = allRooms.filter(r => r.status === filter);
+      
+            if (filter === "AVAILABLE") {
+              btnAvailable.classList.remove("btn-outline-primary");
+              btnAvailable.classList.add("btn-primary");
+              btnOccupied.classList.remove("btn-success");
+              btnOccupied.classList.add("btn-outline-success");
+            } else {
+              btnOccupied.classList.remove("btn-outline-success");
+              btnOccupied.classList.add("btn-success");
+              btnAvailable.classList.remove("btn-primary");
+              btnAvailable.classList.add("btn-outline-primary");
+            }
+      
+            renderRooms(filtered);
+          }
+        }
+      
+        btnAvailable.addEventListener("click", () => applyFilter("AVAILABLE"));
+        btnOccupied.addEventListener("click", () => applyFilter("OCCUPIED"));
+      
+        fetch("http://localhost:3003/api/rooms")
+          .then(response => response.json())
+          .then(rooms => {
+            allRooms = rooms;
+            updateFilterCounts(allRooms);
+            renderRooms(allRooms);
+          });
+      });
+      </script>
+      
 </body>
 
 </html>
