@@ -363,13 +363,10 @@
                 </div>
                 <div class="mb-2">
                   <label class="form-label">Phòng</label>
-                  <select class="form-select">
-                    <option>P.201</option>
-                    <option>P.202</option>
-                    <option>P.203</option>
-                    <option>P.301</option>
-                    <option>P.302</option>
+                  <select class="form-select" id="room-select">
+                    <option>Đang tải phòng...</option>
                   </select>
+                  
                 </div>
                 <div class="mb-2">
                   <label class="form-label">Thời gian tạo HD</label>
@@ -527,6 +524,38 @@
         return amount.toLocaleString('vi-VN');
       }
   
+      async function loadRooms() {
+        const select = document.getElementById("room-select");
+        try {
+          const res = await fetch("http://localhost:3003/api/rooms");
+          const contentType = res.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("Phản hồi không phải JSON: " + await res.text());
+          }
+      
+          const rooms = await res.json();
+          
+          // 👉 Lọc chỉ phòng AVAILABLE
+          const availableRooms = rooms.filter(room => room.status === "AVAILABLE");
+      
+          select.innerHTML = `<option disabled selected>Chọn phòng</option>`;
+          availableRooms.forEach(room => {
+            const opt = document.createElement("option");
+            opt.value = room.id;
+            opt.textContent = room.name;
+            select.appendChild(opt);
+          });
+      
+        } catch (error) {
+          console.error("Lỗi khi tải phòng:", error);
+          select.innerHTML = `<option disabled selected>Không thể tải danh sách phòng</option>`;
+        }
+      }
+      
+      
+      loadRooms();
+
+      
       function updateChangeDue() {
         const customerInput = document.getElementById('customerPayment');
         const changeDue = document.getElementById('changeDue');

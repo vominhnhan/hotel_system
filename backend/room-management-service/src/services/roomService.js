@@ -69,9 +69,11 @@ const roomService = {
 
   // Lấy tất cả các phòng
   getAllRooms: async () => {
-    return await prisma.room.findMany({
+    const rooms = await prisma.room.findMany({
       include: { type: true },
     });
+    console.log("ROOMS FOUND:", rooms);
+    return rooms;
   },
 
   // Cập nhật phòng theo ID
