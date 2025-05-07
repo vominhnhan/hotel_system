@@ -527,7 +527,7 @@
       async function loadRooms() {
         const select = document.getElementById("room-select");
         try {
-          const res = await fetch("http://localhost:3003/api/rooms");
+          const res = await fetchWithAuth("http://localhost:3003/api/rooms");
           const contentType = res.headers.get("content-type");
           if (!contentType || !contentType.includes("application/json")) {
             throw new Error("Phản hồi không phải JSON: " + await res.text());
@@ -700,7 +700,7 @@
       }
   
       try {
-        const response = await fetch("http://localhost:3005/api/services");
+        const response = await fetchWithAuth("http://localhost:3005/api/services");
         allServices = await response.json();
         renderServices(allServices); // render mặc định tất cả
   
@@ -726,6 +726,23 @@
         console.error("Lỗi khi load dịch vụ:", error);
       }
     });
+
+    function fetchWithAuth(url, options = {}) {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Bạn chưa đăng nhập hoặc token đã hết hạn!");
+        window.location.href = "../pages/sign-in.html";
+        return;
+      }
+    
+      return fetch(url, {
+        ...options,
+        headers: {
+          ...(options.headers || {}),
+          "Authorization": `Bearer ${token}`
+        }
+      });
+    }
   </script>
   
   

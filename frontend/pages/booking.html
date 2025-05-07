@@ -734,7 +734,7 @@
       let allRoomsData = [];
     
       // Lưu lại tất cả dữ liệu phòng sau khi fetch
-      fetch("http://localhost:3003/api/rooms")
+      fetchWithAuth("http://localhost:3003/api/rooms")
         .then(response => response.json())
         .then(rooms => {
           allRoomsData = rooms;
@@ -865,7 +865,7 @@
   <!-- Fetch and display room data -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      fetch("http://localhost:3003/api/rooms") // Thay bằng domain thật nếu deploy
+      fetchWithAuth("http://localhost:3003/api/rooms") // Thay bằng domain thật nếu deploy
         .then(response => response.json())
         .then(rooms => {
           const container = document.querySelector(".row.mt-4"); // nơi chứa card phòng
@@ -959,7 +959,7 @@
       
         const roomSelect = document.getElementById('roomSelect');
 
-fetch("http://localhost:3003/api/rooms")
+        fetchWithAuth("http://localhost:3003/api/rooms")
   .then(response => response.json())
   .then(rooms => {
     const availableRooms = rooms.filter(room => room.status === "AVAILABLE");
@@ -1023,7 +1023,7 @@ fetch("http://localhost:3003/api/rooms")
         btnAvailable.addEventListener("click", () => applyFilter("AVAILABLE"));
         btnOccupied.addEventListener("click", () => applyFilter("OCCUPIED"));
       
-        fetch("http://localhost:3003/api/rooms")
+        fetchWithAuth("http://localhost:3003/api/rooms")
           .then(response => response.json())
           .then(rooms => {
             allRooms = rooms;
@@ -1031,6 +1031,24 @@ fetch("http://localhost:3003/api/rooms")
             renderRooms(allRooms);
           });
       });
+
+      function fetchWithAuth(url, options = {}) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Bạn chưa đăng nhập hoặc token đã hết hạn!");
+          window.location.href = "../pages/sign-in.html";
+          return;
+        }
+      
+        return fetch(url, {
+          ...options,
+          headers: {
+            ...(options.headers || {}),
+            "Authorization": `Bearer ${token}`
+          }
+        });
+      }
+      
       </script>
       
 </body>
