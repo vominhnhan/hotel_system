@@ -1,11 +1,16 @@
 import express from 'express';
 import roomTypeController from '../controllers/roomTypeController.js';
 import validateRoomType from '../middlewares/validateRoomType.js';
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 const router = express.Router();
 
+// Áp dụng authMiddleware cho tất cả các route
+router.use(authMiddleware);
+
 // Route POST để tạo loại phòng mới
-router.post('/', validateRoomType, roomTypeController.createRoomType);
+router.post('/', validateRoomType, authorizeRoles("MANAGER"), roomTypeController.createRoomType);
 
 // Route GET để lấy tất cả các loại phòng
 router.get('/', roomTypeController.getAllRoomTypes);
@@ -14,9 +19,9 @@ router.get('/', roomTypeController.getAllRoomTypes);
 router.get('/:id', roomTypeController.getRoomTypeById);
 
 // Route PUT để cập nhật loại phòng theo ID
-router.put('/:id', validateRoomType, roomTypeController.updateRoomType);
+router.put('/:id', validateRoomType, authorizeRoles("MANAGER"), roomTypeController.updateRoomType);
 
 // Route DELETE để xóa loại phòng theo ID
-router.delete('/:id', roomTypeController.deleteRoomType);
+router.delete('/:id', authorizeRoles("MANAGER"), roomTypeController.deleteRoomType);
 
 export default router;
