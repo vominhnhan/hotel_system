@@ -49,7 +49,7 @@
     <hr class="horizontal dark mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item" id="manager-section">
           <a class="nav-link active bg-gradient-dark text-white" href="#" data-bs-toggle="collapse" data-bs-target="#managementMenu" aria-expanded="true">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Quản lý</span>
@@ -703,6 +703,30 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+  
+      try {
+        const payloadBase64 = token.split('.')[1];
+        const decoded = JSON.parse(atob(payloadBase64));
+        const role = decoded.role;
+  
+        // Ẩn mục "Quản lý" nếu không phải MANAGER
+        if (role !== "MANAGER") {
+          const managerSection = document.getElementById("manager-section");
+          if (managerSection) {
+            managerSection.style.display = "none";
+          }
+        }
+  
+      } catch (err) {
+        console.error("Token không hợp lệ", err);
+      }
+    });
+  </script>
 </body>
 
 </html>
