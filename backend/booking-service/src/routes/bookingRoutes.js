@@ -19,7 +19,7 @@ router.get('/', bookingController.getAllBookings);
 router.get('/:id', bookingController.getBookingById);
 
 // Route PUT để cập nhật đặt phòng theo ID
-router.put('/:id', validateBooking, authorizeRoles("MANAGER"), bookingController.updateBooking);
+router.put('/:id', authorizeRoles("MANAGER"), bookingController.updateBooking);
 
 // Route DELETE để xóa đặt phòng theo ID
 router.delete('/:id', authorizeRoles("MANAGER"), bookingController.deleteBooking);

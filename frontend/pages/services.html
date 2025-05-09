@@ -613,119 +613,154 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
-      const container = document.querySelector("#service-list");
-      const buttons = document.querySelectorAll("[data-category]");
-      let allServices = [];
-  
-      function renderServices(servicesToRender) {
-        container.innerHTML = ""; // Clear cũ
-        servicesToRender.forEach((service) => {
-          const card = document.createElement("div");
-          card.className = "col-6 mb-3";
-          card.innerHTML = `
-            <div class="card p-2 h-100 text-center">
-              <img src="../assets/img/items/default.jpg" class="card-img-top rounded" style="height: 80px; object-fit: cover;">
-              <div class="card-body p-2">
-                <p class="text-sm mb-1">${service.name}</p>
-                <h6 class="text-success">${Number(service.price).toLocaleString('vi-VN')}</h6>
-              </div>
-            </div>
-          `;
-          card.addEventListener("click", () => addToInvoice(service));
-          container.appendChild(card);
-        });
-      }
+  const container = document.querySelector("#service-list");
+  const buttons = document.querySelectorAll("[data-category]");
+  let allServices = [];
 
-      function formatCurrency(amount) {
-        return amount.toLocaleString('vi-VN');
+  function renderServices(servicesToRender) {
+    if (!Array.isArray(servicesToRender)) {
+      console.error("Dữ liệu dịch vụ không phải mảng:", servicesToRender);
+      container.innerHTML = `<p class="text-danger text-center">Dữ liệu không hợp lệ</p>`;
+      return;
+    }
+    container.innerHTML = "";
+    servicesToRender.forEach((service) => {
+      if (!service.name || typeof service.price !== 'number') {
+        console.warn("Dịch vụ không hợp lệ:", service);
+        return;
       }
-      
-      function renderInvoice() {
-        const tbody = document.querySelector("#invoice-body");
-        const totalEl = document.querySelector("#total-amount");
-      
-        const modalTbody = document.querySelector("#modal-invoice-body");
-        const modalTotal = document.querySelector("#modal-total");
-      
-        tbody.innerHTML = "";
-        modalTbody.innerHTML = "";
-      
-        let total = 0;
-        invoiceItems.forEach((item, index) => {
-          const itemTotal = item.price * item.quantity;
-          total += itemTotal;
-      
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${item.name}</td>
-            <td class="text-center">${item.quantity}</td>
-            <td class="text-end">${formatCurrency(item.price)}</td>
-            <td class="text-end">${formatCurrency(itemTotal)}</td>
-          `;
-          tbody.appendChild(row);
-      
-          const modalRow = document.createElement("tr");
-          modalRow.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${item.name}</td>
-            <td>${item.quantity}</td>
-            <td>${formatCurrency(item.price)}</td>
-            <td><strong>${formatCurrency(itemTotal)}</strong></td>
-          `;
-          modalTbody.appendChild(modalRow);
-        });
-      
-        totalEl.textContent = formatCurrency(total);
-        modalTotal.textContent = formatCurrency(total);
-
-        // Cập nhật luôn "Còn cần trả" + "Tiền thừa"
-        updateChangeDue();
-      }
-      
-      
-      function addToInvoice(service) {
-        const existing = invoiceItems.find(item => item.name === service.name);
-        if (existing) {
-          existing.quantity += 1;
-        } else {
-          invoiceItems.push({
-            name: service.name,
-            price: service.price,
-            quantity: 1
-          });
-        }
-      
-        renderInvoice();
-      }
-  
-      try {
-        const response = await fetch("http://localhost:3005/api/services");
-        allServices = await response.json();
-        renderServices(allServices); // render mặc định tất cả
-  
-        buttons.forEach(btn => {
-          btn.addEventListener("click", () => {
-            const selected = btn.getAttribute("data-category");
-  
-            // Toggle button styles
-            buttons.forEach(b => b.classList.remove("btn-dark", "text-white"));
-            buttons.forEach(b => b.classList.add("btn-outline-dark"));
-            btn.classList.remove("btn-outline-dark");
-            btn.classList.add("btn-dark", "text-white");
-  
-            const filtered = selected === "Tất cả"
-              ? allServices
-              : allServices.filter(s => s.category === selected);
-  
-            renderServices(filtered);
-          });
-        });
-  
-      } catch (error) {
-        console.error("Lỗi khi load dịch vụ:", error);
-      }
+      const card = document.createElement("div");
+      card.className = "col-6 mb-3";
+      card.innerHTML = `
+        <div class="card p-2 h-100 text-center">
+          <img src="../assets/img/items/default.jpg" class="card-img-top rounded" style="height: 80px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/80';">
+          <div class="card-body p-2">
+            <p class="text-sm mb-1">${service.name}</p>
+            <h6 class="text-success">${Number(service.price).toLocaleString('vi-VN')} VND</h6>
+          </div>
+        </div>
+      `;
+      card.addEventListener("click", () => addToInvoice(service));
+      container.appendChild(card);
     });
+    if (servicesToRender.length === 0) {
+      container.innerHTML = `<p class="text-center">Không có dịch vụ nào</p>`;
+    }
+  }
+
+  function formatCurrency(amount) {
+    return amount.toLocaleString('vi-VN');
+  }
+
+  function updateChangeDue() {
+    const customerInput = document.getElementById('customerPayment');
+    const changeDue = document.getElementById('changeDue');
+    const amountDueEl = document.getElementById('amount-due');
+
+    if (!customerInput || !changeDue || !amountDueEl) {
+      console.warn("Thiếu phần tử cần thiết trong updateChangeDue");
+      return;
+    }
+
+    const raw = customerInput.value.replace(/[^0-9]/g, '');
+    const paid = parseInt(raw || '0');
+    const total = invoiceItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const change = paid - total;
+
+    amountDueEl.textContent = formatCurrency(total);
+    changeDue.textContent = !isNaN(change) && change > 0 ? formatCurrency(change) : '0';
+  }
+
+  function renderInvoice() {
+    const tbody = document.querySelector("#invoice-body");
+    const totalEl = document.querySelector("#total-amount");
+    const modalTbody = document.querySelector("#modal-invoice-body");
+    const modalTotal = document.querySelector("#modal-total");
+
+    tbody.innerHTML = "";
+    modalTbody.innerHTML = "";
+
+    let total = 0;
+    invoiceItems.forEach((item, index) => {
+      const itemTotal = item.price * item.quantity;
+      total += itemTotal;
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${item.name}</td>
+        <td class="text-center">${item.quantity}</td>
+        <td class="text-end">${formatCurrency(item.price)}</td>
+        <td class="text-end">${formatCurrency(itemTotal)}</td>
+      `;
+      tbody.appendChild(row);
+
+      const modalRow = document.createElement("tr");
+      modalRow.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${item.name}</td>
+        <td>${item.quantity}</td>
+        <td>${formatCurrency(item.price)}</td>
+        <td><strong>${formatCurrency(itemTotal)}</strong></td>
+      `;
+      modalTbody.appendChild(modalRow);
+    });
+
+    totalEl.textContent = formatCurrency(total);
+    modalTotal.textContent = formatCurrency(total);
+    updateChangeDue();
+  }
+
+  function addToInvoice(service) {
+    const existing = invoiceItems.find(item => item.name === service.name);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      invoiceItems.push({
+        name: service.name,
+        price: service.price,
+        quantity: 1
+      });
+    }
+    renderInvoice();
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const response = await fetch("http://localhost:3002/api/services", {
+      headers,
+    });
+    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+    allServices = await response.json();
+    if (!Array.isArray(allServices)) throw new Error("Dữ liệu không phải mảng");
+    renderServices(allServices);
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const selected = btn.getAttribute("data-category");
+        buttons.forEach(b => b.classList.remove("btn-dark", "text-white"));
+        buttons.forEach(b => b.classList.add("btn-outline-dark"));
+        btn.classList.remove("btn-outline-dark");
+        btn.classList.add("btn-dark", "text-white");
+
+        const filtered = selected === "Tất cả"
+          ? allServices
+          : allServices.filter(s => {
+              if (!s.category) {
+                console.warn(`Dịch vụ ${s.name} thiếu danh mục`);
+                return false;
+              }
+              return s.category === selected;
+            });
+        renderServices(filtered);
+      });
+    });
+  } catch (error) {
+    console.error("Lỗi khi load dịch vụ:", error);
+    container.innerHTML = `<p class="text-danger text-center">Không thể tải dịch vụ: ${error.message}. Vui lòng đăng nhập lại hoặc liên hệ quản trị viên.</p>`;
+  }
+});
   </script>
   
   
