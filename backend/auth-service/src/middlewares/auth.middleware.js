@@ -17,6 +17,7 @@ export const authMiddleware = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
+    console.error("Token verification error:"); // Log the error for debugging
     return res.status(401).json({ message: "Token không hợp lệ" });
   }
 };
