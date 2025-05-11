@@ -22,7 +22,7 @@ CREATE TABLE `expense_vouchers` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `code` VARCHAR(50) NOT NULL,
     `expense_type_id` INTEGER NOT NULL,
-    `amount` DECIMAL(15, 2) NOT NULL DEFAULT 0,
+    `amount` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
     `note` TEXT NULL,
     `receiver_name` VARCHAR(100) NULL,
     `is_accounted` BOOLEAN NOT NULL DEFAULT true,
