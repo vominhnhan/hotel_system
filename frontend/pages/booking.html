@@ -524,6 +524,37 @@
           </div>
         </div>
       </div>
+
+      <div class="offcanvas offcanvas-end" id="checkoutDetails">
+        <div class="offcanvas-header">
+          <h5>Kiểm tra trước khi check-out - P.502</h5>
+        </div>
+        <div class="offcanvas-body">
+          <h6>Minibar đã dùng</h6>
+          <!-- Duyệt qua minibar -->
+          <div class="row">
+            <div class="col-6">Bia Hà Nội</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="minibar[1]"></div>
+          </div>
+      
+          <h6>CSVC hư hỏng / thiếu</h6>
+          <!-- Duyệt qua CSVC -->
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="5" id="tvHỏng">
+            <label class="form-check-label" for="tvHỏng">
+              Tivi - bị hỏng
+            </label>
+          </div>
+      
+          <div class="mb-3 mt-3">
+            <label for="note">Ghi chú</label>
+            <textarea class="form-control" id="note"></textarea>
+          </div>
+      
+          <button class="btn btn-success" onclick="submitCheckout()">Xác nhận check-out</button>
+        </div>
+      </div>
+      
       
 
       <!-- Payment Modal for Check-in/Check-out -->
@@ -1059,8 +1090,8 @@
                   ${cleaningBadge}
                   <span class="dots" onclick="toggleCleaningStatus('${room.name}', event)">⋮</span>
                 </div>
-                <div class="card card-blog card-plain position-relative ${cardClass}" data-bs-toggle="modal"
-                  data-bs-target="${isOccupied ? '#checkoutModal' : '#roomModal'}" data-room="${room.name}">
+                <div class="card card-blog card-plain position-relative ${cardClass}" data-bs-toggle="offcanvas"
+                  data-bs-target="${isOccupied ? '#checkoutDetails' : '#roomModal'}" data-room="${room.name}">
                   <div class="card-body p-3">
                     <h6 class="mb-1">${room.name}</h6>
                     ${isOccupied ? `<span class="badge bg-gradient-info">Khách lẻ</span>` : ""}
