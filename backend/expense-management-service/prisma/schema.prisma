@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ExpenseCategory {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(100)
+  ExpenseType ExpenseType[]
+
+  @@map("expense_categories")
+}
+
+model ExpenseType {
+  id          Int              @id @default(autoincrement())
+  category_id Int
+  name        String           @db.VarChar(100)
+  description String?          @db.Text
+  category    ExpenseCategory  @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  vouchers    ExpenseVoucher[]
+
+  @@index([category_id])
+  @@map("expense_types")
+}
+
+model ExpenseVoucher {
+  id              Int         @id @default(autoincrement())
+  code            String      @unique @db.VarChar(50)
+  expense_type_id Int
+  amount          Decimal     @default(0.00) @db.Decimal(15, 2)
+  note            String?     @db.Text
+  receiver_name   String?     @db.VarChar(100)
+  is_accounted    Boolean     @default(true)
+  attachment      String?     @db.VarChar(255)
+  created_at      DateTime    @default(now())
+  expense_type    ExpenseType @relation(fields: [expense_type_id], references: [id], onDelete: Cascade)
+
+  @@index([expense_type_id])
+  @@map("expense_vouchers")
+}

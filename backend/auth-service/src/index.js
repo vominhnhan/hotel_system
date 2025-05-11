@@ -14,5 +14,5 @@ app.use(cors());
 app.use("/api/auth", authRouter);
 
 app.listen(PORT, () => {
-  console.log(`Auth Service running on port ${PORT}`);
+  console.log(`Auth Service running on port ${PORT}`);  
 });
