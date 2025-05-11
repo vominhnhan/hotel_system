@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Payment {
+  id              Int       @id @default(autoincrement())
+  booking_id      Int       // Liên kết với Booking Service (bookings)
+  order_id        Int?      // Liên kết với Management Service (order_service), tùy chọn
+  customer_id     Int       // Liên kết với Customer Service (customers)
+  payment_method  String    @db.VarChar(50)
+  amount          Decimal   @db.Decimal(15, 2)
+  status          PaymentStatus @default(PENDING)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  invoices        Invoice[] // Một thanh toán có thể có nhiều hóa đơn
+
+  @@map("payments")
+}
+
+model Invoice {
+  id             Int           @id @default(autoincrement())
+  payment_id     Int
+  customer_id    Int           // Liên kết với Customer Service (customers)
+  invoice_date   DateTime      @default(now())
+  total_amount   Decimal       @db.Decimal(15, 2)
+  attachment     String?       @db.VarChar(255) // Đường dẫn file PDF/hình ảnh
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+  payment        Payment       @relation(fields: [payment_id], references: [id], onDelete: Cascade)
+  items          InvoiceItem[] // Chi tiết hóa đơn
+
+  @@index([payment_id])
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id             Int      @id @default(autoincrement())
+  invoice_id     Int
+  description    String   @db.VarChar(255) // Mô tả mục (ví dụ: "Phí phòng", "Dịch vụ ăn uống")
+  quantity       Int
+  unit_price     Decimal  @db.Decimal(15, 2)
+  total          Decimal  @db.Decimal(15, 2)
+  invoice        Invoice  @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+
+  @@index([invoice_id])
+  @@map("invoice_items")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}

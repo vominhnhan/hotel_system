@@ -7,40 +7,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Nhóm loại chi (expense_categories)
 model ExpenseCategory {
-  id        Int          @id @default(autoincrement())
-  name      String       @db.VarChar(100)
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(100)
   ExpenseType ExpenseType[]
 
   @@map("expense_categories")
 }
 
-// Loại chi cụ thể, liên kết với nhóm (expense_types)
 model ExpenseType {
-  id          Int            @id @default(autoincrement())
+  id          Int              @id @default(autoincrement())
   category_id Int
-  name        String         @db.VarChar(100)
-  description String?        @db.Text
-  category    ExpenseCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  name        String           @db.VarChar(100)
+  description String?          @db.Text
+  category    ExpenseCategory  @relation(fields: [category_id], references: [id], onDelete: Cascade)
   vouchers    ExpenseVoucher[]
 
   @@index([category_id])
   @@map("expense_types")
 }
 
-// Phiếu chi (expense_vouchers)
 model ExpenseVoucher {
-  id            Int         @id @default(autoincrement())
-  code          String      @unique @db.VarChar(50)
+  id              Int         @id @default(autoincrement())
+  code            String      @unique @db.VarChar(50)
   expense_type_id Int
-  amount Decimal @db.Decimal(15, 2) @default(0)
-  note          String?     @db.Text
-  receiver_name String?     @db.VarChar(100)
-  is_accounted  Boolean     @default(true)
-  attachment    String?     @db.VarChar(255)
-  created_at    DateTime    @default(now())
-  expense_type  ExpenseType @relation(fields: [expense_type_id], references: [id], onDelete: Cascade)
+  amount          Decimal     @default(0.00) @db.Decimal(15, 2)
+  note            String?     @db.Text
+  receiver_name   String?     @db.VarChar(100)
+  is_accounted    Boolean     @default(true)
+  attachment      String?     @db.VarChar(255)
+  created_at      DateTime    @default(now())
+  expense_type    ExpenseType @relation(fields: [expense_type_id], references: [id], onDelete: Cascade)
 
   @@index([expense_type_id])
   @@map("expense_vouchers")
