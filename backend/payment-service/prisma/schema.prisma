@@ -8,44 +8,43 @@ datasource db {
 }
 
 model Payment {
-  id              Int       @id @default(autoincrement())
-  booking_id      String    @db.Char(36)         // Dùng UUID
-  order_id        String?   @db.Char(36)         // Dùng UUID, có thể null
-  customer_id     String    @db.Char(36)         // Dùng UUID
-  payment_method  String    @db.VarChar(50)
-  deposit         Decimal   @db.Decimal(15, 2)
-  status          PaymentStatus @default(PENDING)
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @updatedAt
-  invoices        Invoice[] // Một thanh toán có thể có nhiều hóa đơn
+  id             Int           @id @default(autoincrement())
+  booking_id     String        @db.Char(36)
+  order_id       String?       @db.Char(36)
+  customer_id    String        @db.Char(36)
+  payment_method String        @db.VarChar(50)
+  deposit        Decimal       @db.Decimal(15, 2)
+  status         PaymentStatus @default(PENDING)
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+  invoices       Invoice[]
 
   @@map("payments")
 }
 
 model Invoice {
-  id             Int           @id @default(autoincrement())
-  payment_id     Int
-  customer_id    String        @db.Char(36)       // UUID
-  invoice_date   DateTime      @default(now())
-  attachment     String?       @db.VarChar(255)
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @updatedAt
-  payment        Payment       @relation(fields: [payment_id], references: [id], onDelete: Cascade)
-  items          InvoiceItem[]
+  id           Int           @id @default(autoincrement())
+  payment_id   Int
+  customer_id  String        @db.Char(36)
+  invoice_date DateTime      @default(now())
+  attachment   String?       @db.VarChar(255)
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  items        InvoiceItem[]
+  payment      Payment       @relation(fields: [payment_id], references: [id], onDelete: Cascade)
 
   @@index([payment_id])
   @@map("invoices")
 }
 
-
 model InvoiceItem {
-  id             Int      @id @default(autoincrement())
-  invoice_id     Int
-  description    String   @db.VarChar(255) // Mô tả mục (ví dụ: "Phí phòng", "Dịch vụ ăn uống")
-  quantity       Int
-  unit_price     Decimal  @db.Decimal(15, 2)
-  total          Decimal  @db.Decimal(15, 2)
-  invoice        Invoice  @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+  id          Int     @id @default(autoincrement())
+  invoice_id  Int
+  description String  @db.VarChar(255)
+  quantity    Int
+  unit_price  Decimal @db.Decimal(15, 2)
+  total       Decimal @db.Decimal(15, 2)
+  invoice     Invoice @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
 
   @@index([invoice_id])
   @@map("invoice_items")

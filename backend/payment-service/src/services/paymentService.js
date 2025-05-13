@@ -1,18 +1,18 @@
 import prisma from '../common/prisma/init.prisma.js';
 import { ERROR_MESSAGES } from '../common/constants.js';
-import { validate as uuidValidate } from 'uuid'; // Thêm thư viện uuid để kiểm tra UUID
+import { validate as uuidValidate } from 'uuid';
 
 const paymentService = {
   // Kiểm tra thanh toán có tồn tại không
   checkPaymentExists: async (id) => {
-    console.log('checkPaymentExists called with id:', id); // Debug
+    console.log('checkPaymentExists called with id:', id);
     const paymentId = parseInt(id);
     if (isNaN(paymentId)) {
       throw new Error('ID thanh toán phải là số nguyên hợp lệ');
     }
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
     if (!payment) {
-      console.log('Payment not found for id:', id); // Debug
+      console.log('Payment not found for id:', id);
       throw new Error(ERROR_MESSAGES.PAYMENT_NOT_FOUND);
     }
     return payment;
@@ -20,14 +20,14 @@ const paymentService = {
 
   // Kiểm tra hóa đơn có tồn tại không
   checkInvoiceExists: async (id) => {
-    console.log('checkInvoiceExists called with id:', id); // Debug
+    console.log('checkInvoiceExists called with id:', id);
     const invoiceId = parseInt(id);
     if (isNaN(invoiceId)) {
       throw new Error('ID hóa đơn phải là số nguyên hợp lệ');
     }
     const invoice = await prisma.invoice.findUnique({ where: { id: invoiceId } });
     if (!invoice) {
-      console.log('Invoice not found for id:', id); // Debug
+      console.log('Invoice not found for id:', id);
       throw new Error(ERROR_MESSAGES.INVOICE_NOT_FOUND);
     }
     return invoice;
@@ -58,8 +58,17 @@ const paymentService = {
       throw new Error('Phương thức thanh toán phải là chuỗi và không dài quá 50 ký tự');
     }
 
-    // Kiểm tra deposit
-    if (typeof deposit !== 'number' || deposit < 0) {
+    // Kiểm tra và parse deposit
+    let depositNumber;
+    if (typeof deposit === 'string') {
+      depositNumber = parseFloat(deposit);
+    } else if (typeof deposit === 'number') {
+      depositNumber = deposit;
+    } else {
+      throw new Error('Số tiền phải là số hoặc chuỗi số hợp lệ');
+    }
+
+    if (isNaN(depositNumber) || depositNumber <= 0) {
       throw new Error(ERROR_MESSAGES.INVALID_PRICE);
     }
 
@@ -70,11 +79,11 @@ const paymentService = {
 
     return await prisma.payment.create({
       data: {
-        booking_id, // Giữ nguyên chuỗi UUID
+        booking_id,
         order_id: order_id || null,
-        customer_id, // Giữ nguyên chuỗi UUID
+        customer_id,
         payment_method,
-        deposit: parseFloat(deposit.toFixed(2)), // Đảm bảo deposit có 2 chữ số thập phân
+        deposit: parseFloat(depositNumber.toFixed(2)),
         status: status || 'PENDING',
       },
       include: { invoices: { include: { items: true } } },
@@ -88,7 +97,7 @@ const paymentService = {
 
   // Lấy tất cả thanh toán
   getAllPayments: async () => {
-    console.log('getAllPayments called'); // Debug
+    console.log('getAllPayments called');
     return await prisma.payment.findMany({
       include: { invoices: { include: { items: true } } },
       orderBy: { id: 'desc' },
@@ -116,14 +125,20 @@ const paymentService = {
       throw new Error('Phương thức thanh toán phải là chuỗi và không dài quá 50 ký tự');
     }
 
-    // Kiểm tra deposit
-    if (deposit !== undefined && (typeof deposit !== 'number' || deposit < 0)) {
-      throw new Error(ERROR_MESSAGES.INVALID_PRICE);
-    }
+    // Kiểm tra và parse deposit nếu có
+    let depositNumber;
+    if (deposit !== undefined) {
+      if (typeof deposit === 'string') {
+        depositNumber = parseFloat(deposit);
+      } else if (typeof deposit === 'number') {
+        depositNumber = deposit;
+      } else {
+        throw new Error('Số tiền phải là số hoặc chuỗi số hợp lệ');
+      }
 
-    // Kiểm tra status
-    if (status && !['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED'].includes(status)) {
-      throw new Error(ERROR_MESSAGES.INVALID_STATUS);
+      if (isNaN(depositNumber) || depositNumber <= 0) {
+        throw new Error(ERROR_MESSAGES.INVALID_PRICE);
+      }
     }
 
     return await prisma.payment.update({
@@ -133,7 +148,7 @@ const paymentService = {
         order_id: order_id || undefined,
         customer_id: customer_id || undefined,
         payment_method: payment_method || undefined,
-        deposit: deposit !== undefined ? parseFloat(deposit.toFixed(2)) : undefined,
+        deposit: depositNumber !== undefined ? parseFloat(depositNumber.toFixed(2)) : undefined,
         status: status || undefined,
       },
       include: { invoices: { include: { items: true } } },
@@ -148,7 +163,7 @@ const paymentService = {
 
   // Tạo hóa đơn mới
   createInvoice: async (data) => {
-    console.log('createInvoice called with data:', data); // Debug
+    console.log('createInvoice called with data:', data);
     const { payment_id, customer_id, attachment } = data;
 
     // Kiểm tra các trường bắt buộc
@@ -167,8 +182,6 @@ const paymentService = {
       throw new Error('customer_id phải là UUID hợp lệ');
     }
 
-  
-
     // Kiểm tra attachment
     if (attachment && (typeof attachment !== 'string' || attachment.length > 255)) {
       throw new Error('Đường dẫn tệp đính kèm không dài quá 255 ký tự');
@@ -180,7 +193,7 @@ const paymentService = {
     return await prisma.invoice.create({
       data: {
         payment_id: parsedPaymentId,
-        customer_id, // Giữ nguyên chuỗi UUID
+        customer_id,
         attachment: attachment || null,
       },
       include: { payment: true, items: true },
@@ -198,7 +211,7 @@ const paymentService = {
 
   // Lấy tất cả hóa đơn
   getAllInvoices: async () => {
-    console.log('getAllInvoices called'); // Debug
+    console.log('getAllInvoices called');
     return await prisma.invoice.findMany({
       include: { payment: true, items: true },
       orderBy: { created_at: 'desc' },
@@ -207,7 +220,7 @@ const paymentService = {
 
   // Cập nhật hóa đơn
   updateInvoice: async (id, data) => {
-    const { payment_id, customer_id,  attachment } = data;
+    const { payment_id, customer_id, attachment } = data;
     await paymentService.checkInvoiceExists(id);
 
     // Kiểm tra payment_id nếu có
@@ -223,8 +236,6 @@ const paymentService = {
     if (customer_id && !uuidValidate(customer_id)) {
       throw new Error('customer_id phải là UUID hợp lệ');
     }
-
-
 
     // Kiểm tra attachment
     if (attachment && (typeof attachment !== 'string' || attachment.length > 255)) {
@@ -244,7 +255,7 @@ const paymentService = {
 
   // Xóa hóa đơn
   deleteInvoice: async (id) => {
-    console.log('deleteInvoice called with id:', id); // Debug
+    console.log('deleteInvoice called with id:', id);
     await paymentService.checkInvoiceExists(id);
     return await prisma.invoice.delete({ where: { id: parseInt(id) } });
   },
@@ -270,25 +281,34 @@ const paymentService = {
     }
 
     // Kiểm tra quantity
-    if (!Number.isInteger(parseInt(quantity)) || parseInt(quantity) < 0) {
+    if (!Number.isInteger(parseInt(quantity)) || parseInt(quantity) <= 0) {
       throw new Error(ERROR_MESSAGES.INVALID_QUANTITY);
     }
 
     // Kiểm tra unit_price
-    if (typeof unit_price !== 'number' || unit_price < 0) {
+    let unitPriceNumber;
+    if (typeof unit_price === 'string') {
+      unitPriceNumber = parseFloat(unit_price);
+    } else if (typeof unit_price === 'number') {
+      unitPriceNumber = unit_price;
+    } else {
+      throw new Error('Đơn giá phải là số hoặc chuỗi số hợp lệ');
+    }
+
+    if (isNaN(unitPriceNumber) || unitPriceNumber <= 0) {
       throw new Error(ERROR_MESSAGES.INVALID_PRICE);
     }
 
     // Kiểm tra invoice_id có tồn tại
     await paymentService.checkInvoiceExists(parsedInvoiceId);
 
-    const total = parseFloat(unit_price) * parseInt(quantity);
+    const total = parseFloat(unitPriceNumber) * parseInt(quantity);
     return await prisma.invoiceItem.create({
       data: {
         invoice_id: parsedInvoiceId,
         description,
         quantity: parseInt(quantity),
-        unit_price: parseFloat(unit_price.toFixed(2)),
+        unit_price: parseFloat(unitPriceNumber.toFixed(2)),
         total: parseFloat(total.toFixed(2)),
       },
     });
@@ -296,7 +316,7 @@ const paymentService = {
 
   // Lấy danh sách chi tiết hóa đơn theo invoice_id
   getInvoiceItemsByInvoiceId: async (id) => {
-    console.log('getInvoiceItemsByInvoiceId called with id:', id); // Debug
+    console.log('getInvoiceItemsByInvoiceId called with id:', id);
     const invoiceId = parseInt(id);
     if (isNaN(invoiceId)) {
       throw new Error('invoice_id phải là số nguyên hợp lệ');
