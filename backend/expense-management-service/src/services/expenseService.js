@@ -1,6 +1,8 @@
 import validator from "validator";
 import prisma from "../common/prisma/init.prisma.js";
 import { ERROR_MESSAGES } from "../common/constants.js";
+import { Prisma } from "@prisma/client";
+
 
 const expenseService = {
   // Kiểm tra nhóm loại chi có tồn tại không
@@ -26,9 +28,9 @@ const expenseService = {
   },
 
   // Kiểm tra phiếu chi có tồn tại không
-  checkExpenseVoucherExists: async (id) => {
-    console.log("checkExpenseVoucherExists called with id:", id); // Debug
-    const voucher = await prisma.expenseVoucher.findUnique({ where: { id: parseInt(id) } });
+  checkExpenseRecordsExists: async (id) => {
+    console.log("checkExpenseRecordsExists called with id:", id); // Debug
+    const voucher = await prisma.ExpenseRecords.findUnique({ where: { id: parseInt(id) } });
     if (!voucher) {
       console.log("Expense voucher not found for id:", id); // Debug
       throw new Error(ERROR_MESSAGES.EXPENSE_VOUCHER_NOT_FOUND);
@@ -139,64 +141,85 @@ const expenseService = {
   },
 
   // Tạo phiếu chi mới
-  createExpenseVoucher: async (data) => {
-    console.log("createExpenseVoucher called with data:", data); // Debug
+createExpenseRecords: async (data) => {
+    console.log("createExpenseRecords called with data:", data); // Debug
+
+    // Destructure input data
     const { code, expense_type_id, amount, note, receiver_name, is_accounted, attachment } = data;
+
+    // Kiểm tra các trường bắt buộc
     if (!code || !expense_type_id || !amount) {
       throw new Error(ERROR_MESSAGES.MISSING_REQUIRED_FIELDS);
     }
+
+    // Kiểm tra định dạng của mã phiếu chi
     if (typeof code !== 'string' || code.length > 50) {
       throw new Error("Mã phiếu chi phải là chuỗi và không dài quá 50 ký tự");
     }
-    if (!Number.isInteger(parseInt(expense_type_id))) {
+
+    // Kiểm tra expense_type_id
+    if (!Number.isInteger(expense_type_id)) {
       throw new Error("ID loại chi phải là số nguyên");
     }
-    if (typeof amount !== 'number' || amount < 0) {
+
+    // Kiểm tra số tiền phải là số dương
+    if (typeof amount !== 'number' || amount <= 0) {
       throw new Error("Số tiền phải là số dương");
     }
-    await expenseService.checkExpenseTypeExists(expense_type_id); // Kiểm tra expense_type_id có tồn tại
+
+    // Kiểm tra expense_type_id có tồn tại
+    await expenseService.checkExpenseTypeExists(expense_type_id);
+
+    // Kiểm tra tên người nhận (nếu có)
     if (receiver_name && (typeof receiver_name !== 'string' || receiver_name.length > 100)) {
       throw new Error("Tên người nhận phải là chuỗi và không dài quá 100 ký tự");
     }
+
+    // Kiểm tra đường dẫn tệp đính kèm (nếu có)
     if (attachment && (typeof attachment !== 'string' || attachment.length > 255)) {
       throw new Error("Đường dẫn tệp đính kèm không dài quá 255 ký tự");
     }
-    return await prisma.expenseVoucher.create({
+
+    // Tạo bản ghi phiếu chi trong cơ sở dữ liệu
+    return await prisma.ExpenseRecords.create({
       data: {
-        code,
-        expense_type_id: parseInt(expense_type_id),
-        amount,
-        note: note || null,
-        receiver_name: receiver_name || null,
-        is_accounted: is_accounted === undefined ? true : Boolean(is_accounted),
-        attachment: attachment || null,
+        code, // Mã phiếu chi
+        expense_type_id, // Loại chi phí (ID của ExpenseType)
+        amount: new Prisma.Decimal(amount), // Sử dụng Decimal cho số tiền
+        note: note || null, // Ghi chú, có thể null
+        receiver_name: receiver_name || null, // Tên người nhận, có thể null
+        is_accounted: is_accounted === undefined ? true : Boolean(is_accounted), // Trạng thái đã hạch toán
+        attachment: attachment || null, // Đường dẫn tệp đính kèm, có thể null
       },
-      include: { expense_type: true },
+      include: {
+        expense_type: true, // Bao gồm thông tin loại chi phí (ExpenseType)
+      },
     });
   },
 
+
   // Lấy phiếu chi theo ID
-  getExpenseVoucherById: async (id) => {
-    const voucher = await expenseService.checkExpenseVoucherExists(id);
-    return await prisma.expenseVoucher.findUnique({
+  getExpenseRecordsById: async (id) => {
+    const voucher = await expenseService.checkExpenseRecordsExists(id);
+    return await prisma.ExpenseRecords.findUnique({
       where: { id: parseInt(id) },
       include: { expense_type: true },
     });
   },
 
   // Lấy tất cả phiếu chi
-  getAllExpenseVouchers: async () => {
-    console.log("getAllExpenseVouchers called"); // Debug
-    return await prisma.expenseVoucher.findMany({
+  getAllExpenseRecordss: async () => {
+    console.log("getAllExpenseRecordss called"); // Debug
+    return await prisma.ExpenseRecords.findMany({
       include: { expense_type: true },
       orderBy: { created_at: 'desc' },
     });
   },
 
   // Cập nhật phiếu chi
-  updateExpenseVoucher: async (id, data) => {
+  updateExpenseRecords: async (id, data) => {
     const { code, expense_type_id, amount, note, receiver_name, is_accounted, attachment } = data;
-    await expenseService.checkExpenseVoucherExists(id);
+    await expenseService.checkExpenseRecordsExists(id);
     if (code && (typeof code !== 'string' || code.length > 50)) {
       throw new Error("Mã phiếu chi phải là chuỗi và không dài quá 50 ký tự");
     }
@@ -215,7 +238,7 @@ const expenseService = {
     if (attachment && (typeof attachment !== 'string' || attachment.length > 255)) {
       throw new Error("Đường dẫn tệp đính kèm không dài quá 255 ký tự");
     }
-    return await prisma.expenseVoucher.update({
+    return await prisma.ExpenseRecords.update({
       where: { id: parseInt(id) },
       data: {
         code,
@@ -231,10 +254,10 @@ const expenseService = {
   },
 
   // Xóa phiếu chi
-  deleteExpenseVoucher: async (id) => {
-    console.log("deleteExpenseVoucher called with id:", id); // Debug
-    await expenseService.checkExpenseVoucherExists(id);
-    return await prisma.expenseVoucher.delete({ where: { id: parseInt(id) } });
+  deleteExpenseRecords: async (id) => {
+    console.log("deleteExpenseRecords called with id:", id); // Debug
+    await expenseService.checkExpenseRecordsExists(id);
+    return await prisma.ExpenseRecords.delete({ where: { id: parseInt(id) } });
   },
 };
 

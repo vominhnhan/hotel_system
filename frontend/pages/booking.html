@@ -316,6 +316,38 @@
       .price-icons i {
         margin-right: 5px;
       }
+
+      input[type="number"] {
+        background-color: #f8f9fa; /* nền xám nhạt dễ nhìn */
+        border: 1px solid #ced4da; /* đường viền rõ ràng */
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+      
+      input[type="number"]:focus {
+        outline: none;
+        border-color: #4caf50; /* màu xanh khi focus */
+        box-shadow: 0 0 0 1px #4caf50;
+      }
+      
+      /* Ô ghi chú */
+    textarea.form-control {
+      background-color: #f8f9fa;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      font-size: 14px;
+      padding: 8px 12px;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    textarea.form-control:focus {
+      border-color: #4caf50;
+      box-shadow: 0 0 0 1px #4caf50;
+      outline: none;
+    }
     </style>
     
     <div class="container-fluid px-2 px-md-4">
@@ -394,6 +426,37 @@
                 </div>
                 <div class="col-6">
                   <div class="input-group input-group-static mb-3">
+                    <label>Tên khách hàng</label>
+                    <input type="text" class="form-control" id="customerName" placeholder="Nguyễn Văn A">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group input-group-static mb-3">
+                    <label>Số điện thoại</label>
+                    <input type="tel" class="form-control" id="customerPhone" placeholder="090xxxxxxx">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group input-group-static mb-3">
+                    <label>Số CCCD</label>
+                    <input type="tel" class="form-control" id="customerID" placeholder="xxxxxxxxxx">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group input-group-static mb-3">
+                    <label>Email</label>
+                    <input type="text" class="form-control" id="customerEmail" placeholder="abc123@gmail.com">
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="input-group input-group-static mb-3">
+                    <label>Ghi chú</label>
+                    <textarea class="form-control" id="customerNote" rows="2" placeholder="Yêu cầu đặc biệt..."></textarea>
+                  </div>
+                </div>
+                
+                <div class="col-6">
+                  <div class="input-group input-group-static mb-3">
                     <label>Nhận phòng</label>
                     <input type="datetime-local" class="form-control" id="checkInTime" value="2025-05-04T19:36">
                   </div>
@@ -406,10 +469,15 @@
                 </div>
                 <div class="col-6">
                   <div class="input-group input-group-static mb-3">
-                    <label>Thời gian</label>
-                    <input type="text" class="form-control" id="duration" value="1 giờ" readonly>
+                    <label>Hình thức</label>
+                    <select class="form-control" id="rentalType">
+                      <option value="hourly">Thuê theo giờ</option>
+                      <option value="overnight">Thuê qua đêm</option>
+                      <option value="daily">Thuê theo ngày</option>
+                    </select>
                   </div>
                 </div>
+                
                 <div class="col-6">
                   <div class="input-group input-group-static mb-3">
                     <label>Giá</label>
@@ -429,9 +497,8 @@
                   </div>
                 </div>
                 <div class="col-12 text-end">
-                  <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Thêm tùy chọn</button>
+                  <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Hủy</button>
                   <button type="button" class="btn btn-custom" id="bookRoom">Nhận phòng</button>
-                  <button type="button" class="btn btn-warning" id="confirmBooking">Đặt trước</button>
                 </div>
               </div>
             </div>
@@ -483,13 +550,70 @@
               </div>
               <hr>
               <div class="text-end">
-                <button class="btn btn-outline-success me-2">Sửa đặt phòng</button>
                 <button class="btn btn-success" id="checkoutBtn">Trả phòng</button>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div class="offcanvas offcanvas-end" id="checkoutDetails">
+        <div class="offcanvas-header">
+          <h5>Kiểm tra trước khi check-out - P.502</h5>
+        </div>
+        <div class="offcanvas-body">
+          <h6 class="mt-3">Minibar đã dùng</h6>
+          <div class="row mb-2">
+            <div class="col-6">Bia Hà Nội</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="minibar[bia_hanoi]" value="0"></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">Nước suối</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="minibar[nuoc_suoi]" value="0"></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">Bia Heineken</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="minibar[heineken]" value="0"></div>
+          </div>
+
+          <hr>
+
+          <h6>CSVC hư hỏng / thiếu</h6>
+          <!-- Checkbox loại 1 -->
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="tv" id="tvBroken">
+            <label class="form-check-label" for="tvBroken">Tivi - bị hỏng</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="ac" id="acBroken">
+            <label class="form-check-label" for="acBroken">Máy lạnh - không hoạt động</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="fan" id="fanBroken">
+            <label class="form-check-label" for="fanBroken">Quạt - hỏng</label>
+          </div>
+
+          <!-- Input số lượng loại 2 -->
+          <div class="row mt-2 mb-2">
+            <div class="col-6">Dép bị mất</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="csvc[dep_mat]" value="0"></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">Khăn bị mất</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="csvc[khan_mat]" value="0"></div>
+          </div>
+
+      
+          <div class="mb-3 mt-3">
+            <label for="note">Ghi chú</label>
+            <textarea class="form-control" id="note"></textarea>
+          </div>
+      
+          <button class="btn btn-success" onclick="openCheckoutPayment()">Xác nhận check-out</button>
+
+        </div>
+      </div>
+      
       
 
       <!-- Payment Modal for Check-in/Check-out -->
@@ -730,49 +854,73 @@
       const priceField = document.getElementById('price');
       const amountField = document.getElementById('amountToPay');
       const modalTitle = document.getElementById('roomModalLabel');
+      const rentalType = document.getElementById('rentalType');
+      const checkInTime = document.getElementById('checkInTime');
+      const checkOutTime = document.getElementById('checkOutTime');
     
       let allRoomsData = [];
     
-      // Lưu lại tất cả dữ liệu phòng sau khi fetch
-      fetch("http://localhost:3003/api/rooms")
+      // Function tính giá
+      function updateDuration() {
+        const selectedRoom = allRoomsData.find(room => room.name === roomSelect.value);
+        if (!selectedRoom) return;
+      
+        const checkIn = new Date(checkInTime.value);
+        const checkOut = new Date(checkOutTime.value);
+        const diffMs = checkOut - checkIn;
+        const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24)); // Làm tròn lên cho mỗi ngày
+      
+        const rental = rentalType.value;
+        let basePrice = 0;
+        let totalPrice = 0;
+      
+        if (rental === 'hourly') {
+          basePrice = selectedRoom.hourly_price;
+          totalPrice = basePrice * diffHours;
+        } else if (rental === 'overnight') {
+          basePrice = selectedRoom.overnight_price;
+          // Mỗi 24h xem như là 1 đêm
+          const nights = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+          totalPrice = basePrice * nights;
+        } else if (rental === 'daily') {
+          basePrice = selectedRoom.daily_price;
+          totalPrice = basePrice * diffDays;
+        }
+      
+        priceField.value = basePrice.toLocaleString();
+        amountField.value = totalPrice.toLocaleString();
+      }
+      
+    
+      // Khi fetch xong room
+      fetchWithAuth("http://localhost:3003/api/rooms")
         .then(response => response.json())
         .then(rooms => {
           allRoomsData = rooms;
         });
     
+      // Khi mở modal
       roomModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const roomName = button.getAttribute('data-room');
     
-        // Cập nhật tiêu đề modal
         modalTitle.textContent = `Đặt/Nhận phòng nhanh - ${roomName}`;
-    
-        // Chọn đúng phòng trong dropdown
         roomSelect.value = roomName;
     
-        // Lấy thông tin phòng từ allRoomsData
-        const selectedRoom = allRoomsData.find(room => room.name === roomName);
-        if (selectedRoom) {
-          const hourly = selectedRoom.hourly_price?.toLocaleString() || "0";
-          priceField.value = hourly;
-          amountField.value = hourly;
-        }
+        updateDuration(); // Giá đúng khi mở
       });
+    
+      // ✅ Các event thay đổi sẽ cập nhật giá ngay
+      rentalType.addEventListener('change', updateDuration);
+      checkInTime.addEventListener('change', updateDuration);
+      checkOutTime.addEventListener('change', updateDuration);
+      roomSelect.addEventListener('change', updateDuration);
     });
     
-      const roomModal = document.getElementById('roomModal');
-      roomModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const room = button.getAttribute('data-room');
-        const roomSelect = document.getElementById('roomSelect');
-        roomSelect.value = room;
-
-        // Set default values based on room
-        let price = '180,000';
-        if (room === 'P.302') price = '150,000';
-        document.getElementById('price').value = price;
-        document.getElementById('amountToPay').value = price;
-      });
+    
+    
+    
 
       // Simple duration and price update (basic logic)
       const checkInTime = document.getElementById('checkInTime');
@@ -785,16 +933,39 @@
         const checkIn = new Date(checkInTime.value);
         const checkOut = new Date(checkOutTime.value);
         const diffMs = checkOut - checkIn;
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        duration.value = `${diffHours} giờ`;
-        const basePrice = parseInt(price.value.replace(/,/g, ''));
-        amountToPay.value = (diffHours * basePrice).toLocaleString();
+        const diffHours = Math.max(Math.floor(diffMs / (1000 * 60 * 60)), 1);
+      
+        const rentalType = document.getElementById('rentalType').value;
+        const selectedRoom = allRoomsData.find(room => room.name === roomSelect.value);
+      
+        let basePrice = 0;
+        if (!selectedRoom) return;
+      
+        if (rentalType === 'hourly') {
+          basePrice = selectedRoom.hourly_price;
+        } else if (rentalType === 'overnight') {
+          basePrice = selectedRoom.overnight_price;
+        } else if (rentalType === 'daily') {
+          basePrice = selectedRoom.daily_price;
+        }
+      
+        let totalPrice = basePrice;
+        if (rentalType === 'hourly') {
+          totalPrice = diffHours * basePrice;
+        }
+      
+        price.value = basePrice.toLocaleString();
+        amountToPay.value = totalPrice.toLocaleString();
       }
+      
+      
 
       checkInTime.addEventListener('change', updateDuration);
       checkOutTime.addEventListener('change', updateDuration);
     ;
-
+    document.getElementById('rentalType').addEventListener('change', updateDuration);
+    roomSelect.addEventListener('change', updateDuration); // Nếu user đổi phòng
+    
     function toggleRoomStatus(roomId) {
       const statusElement = document.querySelector(`.position-absolute .toggle-status[data-room="${roomId}"]`);
       if (!statusElement) {
@@ -825,10 +996,52 @@
     }
 
     document.getElementById('bookRoom').addEventListener('click', function () {
-      var paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+      const name = document.getElementById('customerName').value;
+      const phone = document.getElementById('customerPhone').value;
+      const note = document.getElementById('customerNote').value;
+      const ID = document.getElementById('customerID').value;
+      const Email = document.getElementById('customerEmail').value;
+      
+      // ✅ Truyền sang modal thanh toán
+      document.querySelector('.modal-title').innerText = `Thanh toán - ${name}`;
+      document.getElementById('roomSelector').value = document.getElementById('roomSelect').value;
+    
+      const rentalType = document.getElementById('rentalType').value;
+      const duration = getRentalDuration(rentalType); // bạn sẽ tạo hàm này phía dưới
+      const unitPrice = document.getElementById('price').value;
+      const totalPrice = document.getElementById('amountToPay').value;
+    
+      // Gán vào các thẻ trong paymentModal
+      document.getElementById('durationHours').innerText = duration;
+      document.getElementById('unitPrice').innerText = unitPrice;
+      document.getElementById('totalPrice').innerText = totalPrice;
+      document.getElementById('grandTotal').innerText = totalPrice;
+      document.getElementById('remainingAmount').innerText = totalPrice;
+      document.getElementById('changeDue').innerText = `-${totalPrice}`;
+    
+      // Hiện modal thanh toán
+      const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
       paymentModal.show();
     });
-
+    
+    function getRentalDuration(type) {
+      const checkIn = new Date(document.getElementById('checkInTime').value);
+      const checkOut = new Date(document.getElementById('checkOutTime').value);
+      const diffMs = checkOut - checkIn;
+    
+      if (type === 'hourly') {
+        const hours = Math.ceil(diffMs / (1000 * 60 * 60));
+        return `${hours} giờ`;
+      } else if (type === 'overnight') {
+        const nights = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        return `${nights} đêm`;
+      } else if (type === 'daily') {
+        const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        return `${days} ngày`;
+      }
+      return '';
+    }
+    
 
     document.getElementById('checkoutBtn').addEventListener('click', function () {
       const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
@@ -865,7 +1078,7 @@
   <!-- Fetch and display room data -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      fetch("http://localhost:3003/api/rooms") // Thay bằng domain thật nếu deploy
+      fetchWithAuth("http://localhost:3003/api/rooms") // Thay bằng domain thật nếu deploy
         .then(response => response.json())
         .then(rooms => {
           const container = document.querySelector(".row.mt-4"); // nơi chứa card phòng
@@ -936,8 +1149,8 @@
                   ${cleaningBadge}
                   <span class="dots" onclick="toggleCleaningStatus('${room.name}', event)">⋮</span>
                 </div>
-                <div class="card card-blog card-plain position-relative ${cardClass}" data-bs-toggle="modal"
-                  data-bs-target="${isOccupied ? '#checkoutModal' : '#roomModal'}" data-room="${room.name}">
+                <div class="card card-blog card-plain position-relative ${cardClass}" data-bs-toggle="offcanvas"
+                  data-bs-target="${isOccupied ? '#checkoutDetails' : '#roomModal'}" data-room="${room.name}">
                   <div class="card-body p-3">
                     <h6 class="mb-1">${room.name}</h6>
                     ${isOccupied ? `<span class="badge bg-gradient-info">Khách lẻ</span>` : ""}
@@ -959,29 +1172,29 @@
       
         const roomSelect = document.getElementById('roomSelect');
 
-fetch("http://localhost:3003/api/rooms")
-  .then(response => response.json())
-  .then(rooms => {
-    const availableRooms = rooms.filter(room => room.status === "AVAILABLE");
+        fetchWithAuth("http://localhost:3003/api/rooms")
+        .then(response => response.json())
+        .then(rooms => {
+          const availableRooms = rooms.filter(room => room.status === "AVAILABLE");
 
-    // Clear and add available rooms to select
-    roomSelect.innerHTML = '';
-    availableRooms.forEach(room => {
-      const option = document.createElement("option");
-      option.value = room.name;
-      option.textContent = `${room.description} - ${room.name}`;
-      roomSelect.appendChild(option);
-    });
+          // Clear and add available rooms to select
+          roomSelect.innerHTML = '';
+          availableRooms.forEach(room => {
+            const option = document.createElement("option");
+            option.value = room.name;
+            option.textContent = `${room.description} - ${room.name}`;
+            roomSelect.appendChild(option);
+          });
 
-    // Nếu có phòng thì gán giá trị đầu tiên cho modal
-    if (availableRooms.length > 0) {
-      roomSelect.value = availableRooms[0].name;
+          // Nếu có phòng thì gán giá trị đầu tiên cho modal
+          if (availableRooms.length > 0) {
+            roomSelect.value = availableRooms[0].name;
 
-      // Gọi hàm cập nhật giá (nếu có)
-      const evt = new CustomEvent('room-select-init', { detail: availableRooms[0] });
-      roomSelect.dispatchEvent(evt);
-    }
-  });
+            // Gọi hàm cập nhật giá (nếu có)
+            const evt = new CustomEvent('room-select-init', { detail: availableRooms[0] });
+            roomSelect.dispatchEvent(evt);
+          }
+        });
 
         function updateFilterCounts(rooms) {
           const available = rooms.filter(r => r.status === "AVAILABLE").length;
@@ -1023,7 +1236,7 @@ fetch("http://localhost:3003/api/rooms")
         btnAvailable.addEventListener("click", () => applyFilter("AVAILABLE"));
         btnOccupied.addEventListener("click", () => applyFilter("OCCUPIED"));
       
-        fetch("http://localhost:3003/api/rooms")
+        fetchWithAuth("http://localhost:3003/api/rooms")
           .then(response => response.json())
           .then(rooms => {
             allRooms = rooms;
@@ -1031,7 +1244,139 @@ fetch("http://localhost:3003/api/rooms")
             renderRooms(allRooms);
           });
       });
+
+      function fetchWithAuth(url, options = {}) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Bạn chưa đăng nhập hoặc token đã hết hạn!");
+          window.location.href = "../pages/sign-in.html";
+          return;
+        }
+      
+        return fetch(url, {
+          ...options,
+          headers: {
+            ...(options.headers || {}),
+            "Authorization": `Bearer ${token}`
+          }
+        });
+      }
+      
+      document.getElementById('customerPayment').addEventListener('input', function () {
+        const customerPayment = parseCurrency(this.value);
+        const remainingAmount = parseCurrency(document.getElementById('remainingAmount').innerText);
+      
+        const change = customerPayment - remainingAmount;
+        const changeDisplay = document.getElementById('changeDue');
+      
+        changeDisplay.innerText = formatCurrency(change);
+        changeDisplay.classList.toggle('text-danger', change < 0);
+        changeDisplay.classList.toggle('text-success', change >= 0);
+      });
+
+      function parseCurrency(value) {
+        return parseInt(value.replace(/[^0-9]/g, '')) || 0;
+      }
+      
+      function formatCurrency(number) {
+        return number.toLocaleString('vi-VN');
+      }
+      
+
+      //Check-out payment
+      function openCheckoutPayment() {
+        const minibarInputs = document.querySelectorAll('[name^="minibar"]');
+        const minibarItems = Array.from(minibarInputs).map(input => {
+          const name = input.closest('.row').querySelector('.col-6').innerText;
+          const quantity = parseInt(input.value || '0');
+          return quantity > 0 ? { name, quantity } : null;
+        }).filter(Boolean);
+      
+        // Checkbox các thiết bị hư
+        const lostItems = [];
+        if (document.getElementById('tvBroken')?.checked) lostItems.push('Tivi');
+        if (document.getElementById('acBroken')?.checked) lostItems.push('Máy lạnh');
+        if (document.getElementById('fanBroken')?.checked) lostItems.push('Quạt');
+        if (document.getElementById('lightBroken')?.checked) lostItems.push('Đèn');
+      
+        // CSVC mất số lượng
+        const csvcInputs = document.querySelectorAll('[name^="csvc"]');
+        const csvcLostItems = Array.from(csvcInputs).map(input => {
+          const name = input.closest('.row').querySelector('.col-6').innerText;
+          const quantity = parseInt(input.value || '0');
+          return quantity > 0 ? { name, quantity } : null;
+        }).filter(Boolean);
+      
+        // Tiền phòng cố định (nếu muốn lấy động thì bạn có thể lấy từ DOM)
+        const roomCharge = 2160000;
+      
+        let itemHTML = `
+          <tr>
+            <td>1</td>
+            <td>Phòng 01 giường đôi cho 2 người</td>
+            <td>12 giờ</td>
+            <td>180,000</td>
+            <td><strong>2,160,000</strong></td>
+          </tr>
+        `;
+      
+        let index = 2;
+        minibarItems.forEach(item => {
+          itemHTML += `
+            <tr>
+              <td>${index++}</td>
+              <td>Minibar - ${item.name}</td>
+              <td>${item.quantity}</td>
+              <td>30,000</td>
+              <td><strong>${(item.quantity * 30000).toLocaleString()}</strong></td>
+            </tr>
+          `;
+        });
+      
+        lostItems.forEach(item => {
+          itemHTML += `
+            <tr>
+              <td>${index++}</td>
+              <td>Thiệt hại - ${item}</td>
+              <td>1</td>
+              <td>500,000</td>
+              <td><strong>500,000</strong></td>
+            </tr>
+          `;
+        });
+      
+        csvcLostItems.forEach(item => {
+          itemHTML += `
+            <tr>
+              <td>${index++}</td>
+              <td>Thiếu - ${item.name}</td>
+              <td>${item.quantity}</td>
+              <td>100,000</td>
+              <td><strong>${(item.quantity * 100000).toLocaleString()}</strong></td>
+            </tr>
+          `;
+        });
+      
+        // Tính tổng
+        const minibarTotal = minibarItems.reduce((sum, i) => sum + i.quantity * 30000, 0);
+        const lostTotal = lostItems.length * 500000;
+        const csvcTotal = csvcLostItems.reduce((sum, i) => sum + i.quantity * 100000, 0);
+      
+        const total = roomCharge + minibarTotal + lostTotal + csvcTotal;
+      
+        // Đổ ra bảng
+        document.querySelector("#paymentModal tbody").innerHTML = itemHTML;
+        document.getElementById("grandTotal").innerText = total.toLocaleString();
+        document.getElementById("remainingAmount").innerText = total.toLocaleString();
+        document.getElementById("changeDue").innerText = `-${total.toLocaleString()}`;
+      
+        const paymentModal = new bootstrap.Modal(document.getElementById("paymentModal"));
+        paymentModal.show();
+      }
+      
+      
       </script>
+      
       
 </body>
 
