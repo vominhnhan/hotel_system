@@ -316,6 +316,38 @@
       .price-icons i {
         margin-right: 5px;
       }
+
+      input[type="number"] {
+        background-color: #f8f9fa; /* nền xám nhạt dễ nhìn */
+        border: 1px solid #ced4da; /* đường viền rõ ràng */
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+      
+      input[type="number"]:focus {
+        outline: none;
+        border-color: #4caf50; /* màu xanh khi focus */
+        box-shadow: 0 0 0 1px #4caf50;
+      }
+      
+      /* Ô ghi chú */
+    textarea.form-control {
+      background-color: #f8f9fa;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      font-size: 14px;
+      padding: 8px 12px;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    textarea.form-control:focus {
+      border-color: #4caf50;
+      box-shadow: 0 0 0 1px #4caf50;
+      outline: none;
+    }
     </style>
     
     <div class="container-fluid px-2 px-md-4">
@@ -530,28 +562,55 @@
           <h5>Kiểm tra trước khi check-out - P.502</h5>
         </div>
         <div class="offcanvas-body">
-          <h6>Minibar đã dùng</h6>
-          <!-- Duyệt qua minibar -->
-          <div class="row">
+          <h6 class="mt-3">Minibar đã dùng</h6>
+          <div class="row mb-2">
             <div class="col-6">Bia Hà Nội</div>
-            <div class="col-6"><input type="number" min="0" class="form-control" name="minibar[1]"></div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="minibar[bia_hanoi]" value="0"></div>
           </div>
-      
+          <div class="row mb-2">
+            <div class="col-6">Nước suối</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="minibar[nuoc_suoi]" value="0"></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">Bia Heineken</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="minibar[heineken]" value="0"></div>
+          </div>
+
+          <hr>
+
           <h6>CSVC hư hỏng / thiếu</h6>
-          <!-- Duyệt qua CSVC -->
+          <!-- Checkbox loại 1 -->
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="5" id="tvHỏng">
-            <label class="form-check-label" for="tvHỏng">
-              Tivi - bị hỏng
-            </label>
+            <input class="form-check-input" type="checkbox" value="tv" id="tvBroken">
+            <label class="form-check-label" for="tvBroken">Tivi - bị hỏng</label>
           </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="ac" id="acBroken">
+            <label class="form-check-label" for="acBroken">Máy lạnh - không hoạt động</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="fan" id="fanBroken">
+            <label class="form-check-label" for="fanBroken">Quạt - hỏng</label>
+          </div>
+
+          <!-- Input số lượng loại 2 -->
+          <div class="row mt-2 mb-2">
+            <div class="col-6">Dép bị mất</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="csvc[dep_mat]" value="0"></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">Khăn bị mất</div>
+            <div class="col-6"><input type="number" min="0" class="form-control" name="csvc[khan_mat]" value="0"></div>
+          </div>
+
       
           <div class="mb-3 mt-3">
             <label for="note">Ghi chú</label>
             <textarea class="form-control" id="note"></textarea>
           </div>
       
-          <button class="btn btn-success" onclick="submitCheckout()">Xác nhận check-out</button>
+          <button class="btn btn-success" onclick="openCheckoutPayment()">Xác nhận check-out</button>
+
         </div>
       </div>
       
@@ -1223,7 +1282,101 @@
         return number.toLocaleString('vi-VN');
       }
       
+
+      //Check-out payment
+      function openCheckoutPayment() {
+        const minibarInputs = document.querySelectorAll('[name^="minibar"]');
+        const minibarItems = Array.from(minibarInputs).map(input => {
+          const name = input.closest('.row').querySelector('.col-6').innerText;
+          const quantity = parseInt(input.value || '0');
+          return quantity > 0 ? { name, quantity } : null;
+        }).filter(Boolean);
+      
+        // Checkbox các thiết bị hư
+        const lostItems = [];
+        if (document.getElementById('tvBroken')?.checked) lostItems.push('Tivi');
+        if (document.getElementById('acBroken')?.checked) lostItems.push('Máy lạnh');
+        if (document.getElementById('fanBroken')?.checked) lostItems.push('Quạt');
+        if (document.getElementById('lightBroken')?.checked) lostItems.push('Đèn');
+      
+        // CSVC mất số lượng
+        const csvcInputs = document.querySelectorAll('[name^="csvc"]');
+        const csvcLostItems = Array.from(csvcInputs).map(input => {
+          const name = input.closest('.row').querySelector('.col-6').innerText;
+          const quantity = parseInt(input.value || '0');
+          return quantity > 0 ? { name, quantity } : null;
+        }).filter(Boolean);
+      
+        // Tiền phòng cố định (nếu muốn lấy động thì bạn có thể lấy từ DOM)
+        const roomCharge = 2160000;
+      
+        let itemHTML = `
+          <tr>
+            <td>1</td>
+            <td>Phòng 01 giường đôi cho 2 người</td>
+            <td>12 giờ</td>
+            <td>180,000</td>
+            <td><strong>2,160,000</strong></td>
+          </tr>
+        `;
+      
+        let index = 2;
+        minibarItems.forEach(item => {
+          itemHTML += `
+            <tr>
+              <td>${index++}</td>
+              <td>Minibar - ${item.name}</td>
+              <td>${item.quantity}</td>
+              <td>30,000</td>
+              <td><strong>${(item.quantity * 30000).toLocaleString()}</strong></td>
+            </tr>
+          `;
+        });
+      
+        lostItems.forEach(item => {
+          itemHTML += `
+            <tr>
+              <td>${index++}</td>
+              <td>Thiệt hại - ${item}</td>
+              <td>1</td>
+              <td>500,000</td>
+              <td><strong>500,000</strong></td>
+            </tr>
+          `;
+        });
+      
+        csvcLostItems.forEach(item => {
+          itemHTML += `
+            <tr>
+              <td>${index++}</td>
+              <td>Thiếu - ${item.name}</td>
+              <td>${item.quantity}</td>
+              <td>100,000</td>
+              <td><strong>${(item.quantity * 100000).toLocaleString()}</strong></td>
+            </tr>
+          `;
+        });
+      
+        // Tính tổng
+        const minibarTotal = minibarItems.reduce((sum, i) => sum + i.quantity * 30000, 0);
+        const lostTotal = lostItems.length * 500000;
+        const csvcTotal = csvcLostItems.reduce((sum, i) => sum + i.quantity * 100000, 0);
+      
+        const total = roomCharge + minibarTotal + lostTotal + csvcTotal;
+      
+        // Đổ ra bảng
+        document.querySelector("#paymentModal tbody").innerHTML = itemHTML;
+        document.getElementById("grandTotal").innerText = total.toLocaleString();
+        document.getElementById("remainingAmount").innerText = total.toLocaleString();
+        document.getElementById("changeDue").innerText = `-${total.toLocaleString()}`;
+      
+        const paymentModal = new bootstrap.Modal(document.getElementById("paymentModal"));
+        paymentModal.show();
+      }
+      
+      
       </script>
+      
       
 </body>
 
