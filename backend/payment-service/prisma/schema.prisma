@@ -9,11 +9,11 @@ datasource db {
 
 model Payment {
   id              Int       @id @default(autoincrement())
-  booking_id      Int       // Liên kết với Booking Service (bookings)
-  order_id        Int?      // Liên kết với Management Service (order_service), tùy chọn
-  customer_id     Int       // Liên kết với Customer Service (customers)
+  booking_id      String    @db.Char(36)         // Dùng UUID
+  order_id        String?   @db.Char(36)         // Dùng UUID, có thể null
+  customer_id     String    @db.Char(36)         // Dùng UUID
   payment_method  String    @db.VarChar(50)
-  amount          Decimal   @db.Decimal(15, 2)
+  deposit         Decimal   @db.Decimal(15, 2)
   status          PaymentStatus @default(PENDING)
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
@@ -25,18 +25,18 @@ model Payment {
 model Invoice {
   id             Int           @id @default(autoincrement())
   payment_id     Int
-  customer_id    Int           // Liên kết với Customer Service (customers)
+  customer_id    String        @db.Char(36)       // UUID
   invoice_date   DateTime      @default(now())
-  total_amount   Decimal       @db.Decimal(15, 2)
-  attachment     String?       @db.VarChar(255) // Đường dẫn file PDF/hình ảnh
+  attachment     String?       @db.VarChar(255)
   created_at     DateTime      @default(now())
   updated_at     DateTime      @updatedAt
   payment        Payment       @relation(fields: [payment_id], references: [id], onDelete: Cascade)
-  items          InvoiceItem[] // Chi tiết hóa đơn
+  items          InvoiceItem[]
 
   @@index([payment_id])
   @@map("invoices")
 }
+
 
 model InvoiceItem {
   id             Int      @id @default(autoincrement())

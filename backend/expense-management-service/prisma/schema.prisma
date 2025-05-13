@@ -21,13 +21,13 @@ model ExpenseType {
   name        String           @db.VarChar(100)
   description String?          @db.Text
   category    ExpenseCategory  @relation(fields: [category_id], references: [id], onDelete: Cascade)
-  vouchers    ExpenseVoucher[]
+  vouchers    ExpenseRecords[] // Changed to ExpenseRecords as per your schema
 
   @@index([category_id])
   @@map("expense_types")
 }
 
-model ExpenseVoucher {
+model ExpenseRecords {
   id              Int         @id @default(autoincrement())
   code            String      @unique @db.VarChar(50)
   expense_type_id Int

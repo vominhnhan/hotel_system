@@ -57,18 +57,27 @@ const paymentController = {
   },
 
   // Tạo hóa đơn mới (có xử lý tệp đính kèm)
-  createInvoice: async (req, res) => {
-    try {
-      const data = {
-        ...req.body,
-        attachment: req.file ? `/uploads/${req.file.filename}` : null, // Lưu đường dẫn tệp
-      };
-      const invoice = await paymentService.createInvoice(data);
-      res.status(201).json(invoice);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+createInvoice: async (req, res) => {
+  try {
+    const { payment_id, customer_id } = req.body;
+    
+    // Kiểm tra các trường bắt buộc trước khi tạo data
+    if (!payment_id || !customer_id) {
+      throw new Error(ERROR_MESSAGES.MISSING_REQUIRED_FIELDS);
     }
-  },
+
+    const data = {
+      payment_id: parseInt(payment_id), // Chuyển đổi payment_id thành số nguyên
+      customer_id, // Giữ nguyên customer_id dưới dạng chuỗi UUID
+      attachment: req.file ? `/uploads/${req.file.filename}` : req.body.attachment || null,
+    };
+    
+    const invoice = await paymentService.createInvoice(data);
+    res.status(201).json(invoice);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+},
 
   // Lấy thông tin hóa đơn theo ID
   getInvoiceById: async (req, res) => {

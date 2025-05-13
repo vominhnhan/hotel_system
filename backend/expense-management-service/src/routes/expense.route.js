@@ -47,11 +47,11 @@ router.get('/types/:id', expenseController.getExpenseTypeById);
 router.put('/types/:id', authorizeRoles("MANAGER"), expenseController.updateExpenseType);
 router.delete('/types/:id', authorizeRoles("MANAGER"), expenseController.deleteExpenseType);
 
-// Routes cho phiếu chi (ExpenseVoucher) - Chỉ MANAGER mới được tạo, sửa, xóa
-router.post('/vouchers', upload.single('attachment'), authorizeRoles("MANAGER"), expenseController.createExpenseVoucher);
-router.get('/vouchers', expenseController.getAllExpenseVouchers);
-router.get('/vouchers/:id', expenseController.getExpenseVoucherById);
-router.put('/vouchers/:id', upload.single('attachment'), authorizeRoles("MANAGER"), expenseController.updateExpenseVoucher);
-router.delete('/vouchers/:id', authorizeRoles("MANAGER"), expenseController.deleteExpenseVoucher);
+// Routes cho phiếu chi (ExpenseRecords) - Chỉ MANAGER mới được tạo, sửa, xóa
+router.post('/vouchers', upload.single('attachment'), authorizeRoles("MANAGER"), expenseController.createExpenseRecords);
+router.get('/vouchers', expenseController.getAllExpenseRecordss);
+router.get('/vouchers/:id', expenseController.getExpenseRecordsById);
+router.put('/vouchers/:id', upload.single('attachment'), authorizeRoles("MANAGER"), expenseController.updateExpenseRecords);
+router.delete('/vouchers/:id', authorizeRoles("MANAGER"), expenseController.deleteExpenseRecords);
 
 export default router;
